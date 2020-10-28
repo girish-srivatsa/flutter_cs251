@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/After-Login/after.dart';
+import 'package:flutter_auth/Screens/Login/components/ResponseR.dart';
 import 'package:flutter_auth/Screens/Login/components/background.dart';
 import 'package:flutter_auth/Screens/Signup/signup_screen.dart';
 import 'package:flutter_auth/components/already_have_an_account_acheck.dart';
@@ -10,16 +11,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:uuid/uuid.dart';
-
-class ResponseR {
-  final int id;
-
-  ResponseR({this.id});
-
-  factory ResponseR.fromJson(Map<String, dynamic> json) {
-    return ResponseR(id: json["id"]);
-  }
-}
 
 class Body extends StatelessWidget {
   const Body({
@@ -43,14 +34,14 @@ class Body extends StatelessWidget {
       // If the server did return a 200 CREATED response,
       // then parse the JSON.
       print("4\n");
-      print(response.body);
-
-      return ResponseR(id: 5);
+      var V = jsonDecode(response.body);
+      print(V);
+      return ResponseR.fromJson(V);
     } else {
       print("\n\n");
       print(response.statusCode);
       //print(response.body);
-      return ResponseR(id: -1);
+      return ResponseR(tokenForm: "");
     }
   }
 
@@ -97,15 +88,13 @@ class Body extends StatelessWidget {
                 beta.then((val) {
                   username = "";
                   password = "";
-                  print("\n\n");
-                  print(val.id);
-                  var theId = val.id.toString();
+                  print("login");
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => AfterScreen(),
                           settings: RouteSettings(
-                            arguments: theId,
+                            arguments: val,
                           )));
                 });
               },
