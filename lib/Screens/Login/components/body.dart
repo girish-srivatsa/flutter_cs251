@@ -9,19 +9,15 @@ import 'package:flutter_auth/components/rounded_password_field.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:uuid/uuid.dart';
 
 class ResponseR {
   final int id;
-  final String firstName;
-  final String lastName;
 
-  ResponseR({this.id, this.firstName, this.lastName});
+  ResponseR({this.id});
 
-  factory ResponseR.fromJson(Map<int, dynamic> json) {
-    return ResponseR(
-        id: json["id"],
-        firstName: json["first_name"],
-        lastName: json["last_name"]);
+  factory ResponseR.fromJson(Map<String, dynamic> json) {
+    return ResponseR(id: json["id"]);
   }
 }
 
@@ -30,7 +26,8 @@ class Body extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
-  Future<ResponseR> login(String username, String password) async {
+  Future<ResponseR> login(
+      String username, String password, String uniqueId) async {
     final response = await http.post(
       'https://back-dashboard.herokuapp.com/api/auth/login/',
       headers: <String, String>{
@@ -39,23 +36,29 @@ class Body extends StatelessWidget {
       body: jsonEncode(<String, String>{
         "username": username,
         "password": password,
+        "uuid": uniqueId,
       }),
     );
-    if (response.statusCode == 201) {
-      // If the server did return a 201 CREATED response,
+    if (response.statusCode == 200) {
+      // If the server did return a 200 CREATED response,
       // then parse the JSON.
-      return ResponseR.fromJson(jsonDecode(response.body));
+      print("4\n");
+      print(response.body);
+
+      return ResponseR(id: 5);
     } else {
-      return ResponseR(
-          id: 1000000, firstName: "Hello There", lastName: "Bye Bye");
+      print("\n\n");
+      print(response.statusCode);
+      //print(response.body);
+      return ResponseR(id: -1);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    String username;
-    String password;
+    String username = "";
+    String password = "";
     return Background(
       child: SingleChildScrollView(
         child: Column(
@@ -73,28 +76,36 @@ class Body extends StatelessWidget {
             SizedBox(height: size.height * 0.03),
             RoundedInputField(
               hintText: "Your Username",
-              onChanged: (value) {
+              onChanged: (String value) {
                 username = value;
               },
             ),
             RoundedPasswordField(
-              onChanged: (value) {
+              onChanged: (String value) {
                 password = value;
               },
             ),
             RoundedButton(
-              text: "LOGIN",
+              text: "LOGIN ",
               press: () {
-                var beta = login(username, password);
+                var uuid = Uuid();
+                var d = uuid.v4();
+                var beta = login(username, password, d);
                 String eta = 'eta';
+                print("\n\n");
+                print(eta);
                 beta.then((val) {
-                  eta = val.firstName + " " + val.lastName;
+                  username = "";
+                  password = "";
+                  print("\n\n");
+                  print(val.id);
+                  var theId = val.id.toString();
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => AfterScreen(),
                           settings: RouteSettings(
-                            arguments: eta,
+                            arguments: theId,
                           )));
                 });
               },

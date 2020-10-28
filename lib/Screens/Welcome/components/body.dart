@@ -19,7 +19,7 @@ class Body extends StatelessWidget {
             Text(
               "Notify Me",
               style: TextStyle(
-                color: Colors.redAccent,
+                color: Colors.black87,
                 fontWeight: FontWeight.bold,
                 fontSize: 30,
               ),
