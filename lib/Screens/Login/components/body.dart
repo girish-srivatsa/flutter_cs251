@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/Screens/After-Login/after.dart';
 import 'package:flutter_auth/Screens/Login/components/background.dart';
 import 'package:flutter_auth/Screens/Signup/signup_screen.dart';
 import 'package:flutter_auth/components/already_have_an_account_acheck.dart';
@@ -88,16 +89,13 @@ class Body extends StatelessWidget {
                 String eta = 'eta';
                 beta.then((val) {
                   eta = val.firstName + " " + val.lastName;
-                  return showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        // Retrieve the text the that user has entered by using the
-                        // TextEditingController.
-                        content: Text(eta),
-                      );
-                    },
-                  );
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AfterScreen(),
+                          settings: RouteSettings(
+                            arguments: eta,
+                          )));
                 });
               },
             ),
