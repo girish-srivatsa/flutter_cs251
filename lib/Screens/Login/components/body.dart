@@ -7,15 +7,54 @@ import 'package:flutter_auth/components/rounded_input_field.dart';
 import 'package:flutter_auth/components/rounded_password_field.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class ResponseR {
+  final int id;
+  final String firstName;
+  final String lastName;
+
+  ResponseR({this.id, this.firstName, this.lastName});
+
+  factory ResponseR.fromJson(Map<int, dynamic> json) {
+    return ResponseR(
+        id: json["id"],
+        firstName: json["first_name"],
+        lastName: json["last_name"]);
+  }
+}
 
 class Body extends StatelessWidget {
   const Body({
     Key key,
   }) : super(key: key);
 
+  Future<ResponseR> login(String username, String password) async {
+    final response = await http.post(
+      'https://back-dashboard.herokuapp.com/api/auth/login/',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        "username": username,
+        "password": password,
+      }),
+    );
+    if (response.statusCode == 201) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      return ResponseR.fromJson(jsonDecode(response.body));
+    } else {
+      return ResponseR(
+          id: 1000000, firstName: "Hello There", lastName: "Bye Bye");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    String username;
+    String password;
     return Background(
       child: SingleChildScrollView(
         child: Column(
@@ -32,15 +71,35 @@ class Body extends StatelessWidget {
             ),
             SizedBox(height: size.height * 0.03),
             RoundedInputField(
-              hintText: "Your Email",
-              onChanged: (value) {},
+              hintText: "Your Username",
+              onChanged: (value) {
+                username = value;
+              },
             ),
             RoundedPasswordField(
-              onChanged: (value) {},
+              onChanged: (value) {
+                password = value;
+              },
             ),
             RoundedButton(
               text: "LOGIN",
-              press: () {},
+              press: () {
+                var beta = login(username, password);
+                String eta = 'eta';
+                beta.then((val) {
+                  eta = val.firstName + " " + val.lastName;
+                  return showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        // Retrieve the text the that user has entered by using the
+                        // TextEditingController.
+                        content: Text(eta),
+                      );
+                    },
+                  );
+                });
+              },
             ),
             SizedBox(height: size.height * 0.03),
             AlreadyHaveAnAccountCheck(
