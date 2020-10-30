@@ -36,7 +36,8 @@ class Body extends StatelessWidget {
       print("4\n");
       var V = jsonDecode(response.body);
       print(V);
-      return ResponseR.fromJson(V);
+      ResponseR X = ResponseR.fromJson(V);
+      return X;
     } else {
       print("\n\n");
       print(response.statusCode);
