@@ -11,38 +11,50 @@ import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:uuid/uuid.dart';
+import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart' as secure;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import '../../../main.dart';
 
 class Body extends StatelessWidget {
   const Body({
     Key key,
   }) : super(key: key);
 
-  Future<ResponseR> login(
-      String username, String password, String uniqueId) async {
+  Future<ResponseR> login(String username, String password) async {
     final response = await http.post(
-      'https://back-dashboard.herokuapp.com/api/auth/login/',
+      'https://back-dashboard.herokuapp.com/api/auth/get-token/',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, String>{
-        "username": username,
-        "password": password,
-        "uuid": uniqueId,
-      }),
+      body: jsonEncode(
+          <String, String>{"username": username, "password": password}),
     );
     if (response.statusCode == 200) {
       // If the server did return a 200 CREATED response,
       // then parse the JSON.
       print("4\n");
+      print(response.body);
       var V = jsonDecode(response.body);
       print(V);
+      String tok = V['token'];
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(tok);
+      print(decodedToken);
+      await store.write(key: 'token', value: tok);
+      String t = await store.read(key: 'token');
+      print(t);
+      DateTime expirationDate = JwtDecoder.getExpirationDate(tok);
+      print(expirationDate);
+      await store.write(key: 'expiry', value: expirationDate.toIso8601String());
+
       ResponseR X = ResponseR.fromJson(V);
       return X;
     } else {
       print("\n\n");
       print(response.statusCode);
       //print(response.body);
-      return ResponseR(tokenForm: "");
+      return ResponseR(token: null);
     }
   }
 
@@ -80,9 +92,7 @@ class Body extends StatelessWidget {
             RoundedButton(
               text: "LOGIN ",
               press: () {
-                var uuid = Uuid();
-                var d = uuid.v4();
-                var beta = login(username, password, d);
+                var beta = login(username, password);
                 String eta = 'eta';
                 print("\n\n");
                 print(eta);

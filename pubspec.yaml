@@ -21,6 +21,10 @@ dependencies:
     sdk: flutter
   http: ^0.12.2
   uuid: ^2.2.2
+  shared_preferences: '>=0.5.12+2 <2.0.0'
+  jwt_decoder: ^1.0.3
+  flutter_secure_storage: ^3.3.5
+  workmanager: ^0.2.3
 
 
 
