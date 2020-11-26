@@ -6,10 +6,17 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart' as secure;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'Screens/Home/courseform.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final store = new secure.FlutterSecureStorage();
 final BASE = 'http://127.0.0.1/';
 const myTask = "syncWithTheBackEnd";
+final prefs = null;
+String token;
+bool prof = false;
+bool loggedIn;
+DateTime expiry;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,59 +35,36 @@ void main() {
 
 void callbackDispatcher() {
   Workmanager.executeTask((task, inputData) async {
-    print('start');
     switch (task) {
       case myTask:
-        print('in');
-        String t = await store.read(key: 'token');
-        print(t);
-        if (t != null) {
-          print('token found');
-          DateTime exp = JwtDecoder.getExpirationDate(t);
-          print(exp);
-          String w = await store.read(key: 'expiry');
-          print(w);
-          DateTime expiry = DateTime.parse(w);
-          print('hi');
+        /*String t = await store.read(key: 'token');
+        print(t);*/
+        if (token != null) {
           DateTime curr = new DateTime.now();
-          print('bye');
-          print(expiry);
-          print(curr);
           if (expiry.isAfter(curr)) {
-            print('still valid');
             var url =
                 'https://back-dashboard.herokuapp.com/api/auth/refresh-token/';
-            print(t);
             final response = await http.post(
               url,
               headers: <String, String>{
                 'Content-Type': 'application/json; charset=UTF-8',
               },
-              body: jsonEncode(<String, String>{'token': t}),
+              body: jsonEncode(<String, String>{'token': token}),
             );
-            print(response.body);
-            print('done');
             if (response.statusCode == 200) {
-              print('success');
               var V = jsonDecode(response.body);
-              String tok = V['token'];
-              Map<String, dynamic> decodedToken = JwtDecoder.decode(tok);
-              await store.write(key: 'token', value: tok);
-              DateTime expirationDate = JwtDecoder.getExpirationDate(tok);
-              await store.write(
-                  key: 'expiry', value: expirationDate.toIso8601String());
-              await store.write(key: 'loggedIn', value: 'true');
-              print('refresh background ok');
+              token = V['token'];
+              expiry = JwtDecoder.getExpirationDate(token);
+              loggedIn = true;
               return true;
             } else {
-              print('fail');
-              await store.write(key: 'loggedIn', value: 'false');
+              loggedIn = false;
             }
           } else {
-            await store.write(key: 'loggedIn', value: 'false');
+            loggedIn = false;
           }
         } else {
-          await store.write(key: 'loggedIn', value: 'false');
+          loggedIn = false;
         }
         break;
       case Workmanager.iOSBackgroundTask:

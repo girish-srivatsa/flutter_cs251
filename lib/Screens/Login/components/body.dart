@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/After-Login/after.dart';
+import 'package:flutter_auth/Screens/Home/home.dart';
 import 'package:flutter_auth/Screens/Login/components/ResponseR.dart';
 import 'package:flutter_auth/Screens/Login/components/background.dart';
+import 'package:flutter_auth/Screens/Login/login_screen.dart';
 import 'package:flutter_auth/Screens/Signup/signup_screen.dart';
 import 'package:flutter_auth/components/already_have_an_account_acheck.dart';
 import 'package:flutter_auth/components/rounded_button.dart';
@@ -22,7 +26,7 @@ class Body extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
-  Future<ResponseR> login(String username, String password) async {
+  Future<bool> login(String username, String password) async {
     final response = await http.post(
       'https://back-dashboard.herokuapp.com/api/auth/get-token/',
       headers: <String, String>{
@@ -39,22 +43,40 @@ class Body extends StatelessWidget {
       var V = jsonDecode(response.body);
       print(V);
       String tok = V['token'];
+      token = tok;
       Map<String, dynamic> decodedToken = JwtDecoder.decode(tok);
       print(decodedToken);
       await store.write(key: 'token', value: tok);
       String t = await store.read(key: 'token');
       print(t);
       DateTime expirationDate = JwtDecoder.getExpirationDate(tok);
+      expiry = expirationDate;
       print(expirationDate);
       await store.write(key: 'expiry', value: expirationDate.toIso8601String());
-
       ResponseR X = ResponseR.fromJson(V);
-      return X;
+      final resp = await http.get(
+        'https://back-dashboard.herokuapp.com/api/usermy/',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'JWT ' + tok,
+        },
+      );
+      var U = jsonDecode(resp.body);
+      if (U['is_professor']) {
+        prof = true;
+        await store.write(key: 'professor', value: 'true');
+      } else {
+        prof = false;
+        await store.write(key: 'professor', value: 'false');
+      }
+      loggedIn = true;
+      return Future.value(true);
     } else {
       print("\n\n");
       print(response.statusCode);
       //print(response.body);
-      return ResponseR(token: null);
+      loggedIn = false;
+      return Future.value(false);
     }
   }
 
@@ -99,14 +121,16 @@ class Body extends StatelessWidget {
                 beta.then((val) {
                   username = "";
                   password = "";
-                  print("login");
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AfterScreen(),
-                          settings: RouteSettings(
-                            arguments: val,
-                          )));
+                  if (val) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                loggedIn ? HomePage(prof: prof) : LoginScreen(),
+                            settings: RouteSettings(
+                              arguments: val,
+                            )));
+                  } else {}
                 });
               },
             ),

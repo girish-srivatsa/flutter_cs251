@@ -1,7 +1,3 @@
-class Course {
-  int id;
-}
-
 class ResponseR {
   final token;
 
