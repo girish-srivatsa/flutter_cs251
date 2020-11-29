@@ -26,15 +26,16 @@ Prefs prefs = new Prefs();
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Workmanager.initialize(callbackDispatcher, isInDebugMode: true);
-  Workmanager.registerPeriodicTask("1",
-      myTask, //This is the value that will be returned in the callbackDispatcher
-      frequency: Duration(minutes: 15),
-      constraints: Constraints(
-        requiresBatteryNotLow: true,
-        networkType: NetworkType.connected,
-      ),
-      backoffPolicy: BackoffPolicy.exponential,
-      backoffPolicyDelay: Duration(seconds: 10));
+  Workmanager.registerPeriodicTask(
+    "1",
+    myTask, //This is the value that will be returned in the callbackDispatcher
+    frequency: Duration(minutes: 15),
+    constraints: Constraints(
+      requiresBatteryNotLow: true,
+      networkType: NetworkType.connected,
+    ),
+    initialDelay: Duration(seconds: 60),
+  );
   runApp(MyApp());
 }
 

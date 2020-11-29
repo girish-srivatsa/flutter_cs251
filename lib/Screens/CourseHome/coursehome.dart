@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/After-Login/logged_out.dart';
 import 'package:flutter_auth/components/rounded_button.dart';
+import 'package:flutter_auth/components/rounded_input_field.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_auth/Screens/Login/components/ResponseR.dart';
@@ -14,6 +15,7 @@ import '../../main.dart';
 import 'message.dart';
 import 'messageform.dart';
 import 'messagelist.dart';
+import 'addStud.dart';
 
 import 'messagewrapper.dart';
 
@@ -55,6 +57,7 @@ class _CourseHomePageState extends State<CourseHomePage> {
     this.setState(() {
       addMessage(message, to).then((val) => {
             setState(() {
+              print(val.from_username);
               addm(val);
             })
           });
@@ -77,6 +80,7 @@ class _CourseHomePageState extends State<CourseHomePage> {
       var V = jsonDecode(response.body);
       Message j = Message.fromJson(V);
       String s = await prefs.getString('username');
+      j.from_username = s;
       print(s);
       print(j.from_username);
       print(V);
@@ -116,6 +120,15 @@ class _CourseHomePageState extends State<CourseHomePage> {
         appBar: bar(),
         body: Column(
           children: <Widget>[
+            this.widget.stat != 'student'
+                ? StudentAdd(
+                    stat: this.widget.stat,
+                    id: this.widget.id,
+                  )
+                : Container(
+                    height: 0,
+                    width: 0,
+                  ),
             Expanded(
               child: MessageList(this.messages, true),
             ),
