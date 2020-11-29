@@ -20,6 +20,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart' as secure;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import '../../../main.dart';
+import '../../../function.dart';
+import '../../CourseHome/coursehome.dart';
+
+bool prof = false;
 
 class Body extends StatelessWidget {
   const Body({
@@ -41,19 +45,14 @@ class Body extends StatelessWidget {
       print("4\n");
       print(response.body);
       var V = jsonDecode(response.body);
-      print(V);
       String tok = V['token'];
       token = tok;
-      Map<String, dynamic> decodedToken = JwtDecoder.decode(tok);
-      print(decodedToken);
-      await store.write(key: 'token', value: tok);
-      String t = await store.read(key: 'token');
-      print(t);
+      prefs.addString('token', tok);
+      print(tok);
+      prefs.addString('username', username);
       DateTime expirationDate = JwtDecoder.getExpirationDate(tok);
-      expiry = expirationDate;
       print(expirationDate);
-      await store.write(key: 'expiry', value: expirationDate.toIso8601String());
-      ResponseR X = ResponseR.fromJson(V);
+      prefs.addString('expiry', expirationDate.toIso8601String());
       final resp = await http.get(
         'https://back-dashboard.herokuapp.com/api/usermy/',
         headers: <String, String>{
@@ -64,17 +63,17 @@ class Body extends StatelessWidget {
       var U = jsonDecode(resp.body);
       if (U['is_professor']) {
         prof = true;
-        await store.write(key: 'professor', value: 'true');
+        prefs.addBool('professor', true);
       } else {
         prof = false;
-        await store.write(key: 'professor', value: 'false');
+        prefs.addBool('professor', false);
       }
+      prefs.addBool('loggedIn', true);
       loggedIn = true;
       return Future.value(true);
     } else {
-      print("\n\n");
-      print(response.statusCode);
       //print(response.body);
+      prefs.addBool('loggedIn', false);
       loggedIn = false;
       return Future.value(false);
     }
@@ -125,8 +124,11 @@ class Body extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                loggedIn ? HomePage(prof: prof) : LoginScreen(),
+                            builder: (context) => loggedIn
+                                ? HomePage(
+                                    prof: prof,
+                                  )
+                                : LoginScreen(),
                             settings: RouteSettings(
                               arguments: val,
                             )));

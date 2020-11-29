@@ -56,7 +56,7 @@ class _CourseWrapperState extends State<CourseWrapper> {
             padding: EdgeInsets.all(0),
             icon: Icon(Icons.arrow_drop_up_sharp),
             splashColor: Colors.blue,
-            tooltip: "close",
+            tooltip: "open",
             onPressed: this.activator,
           ),
         ],

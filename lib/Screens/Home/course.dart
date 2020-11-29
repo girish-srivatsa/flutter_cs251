@@ -6,6 +6,6 @@ class Course {
   Course.generate(this.id, this.name, this.code);
   factory Course.fromJson(dynamic json) {
     return Course.generate(
-        json['id'] as int, json['name'] as String, json['code'] as String);
+        json["id"] as int, json["name"] as String, json["code"] as String);
   }
 }

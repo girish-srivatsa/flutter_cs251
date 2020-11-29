@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/Screens/Login/login_screen.dart';
 import 'package:flutter_auth/Screens/Welcome/welcome_screen.dart';
 import 'package:flutter_auth/constants.dart';
 import 'package:workmanager/workmanager.dart';
@@ -8,15 +9,19 @@ import 'dart:convert';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'Screens/Home/courseform.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'function.dart';
+import 'Screens/CourseHome/messagewrapper.dart';
+import 'Screens/CourseHome/messageform.dart';
+import 'Screens/CourseHome/coursehome.dart';
+import 'Screens/CourseHome/messageTAform.dart';
 
 final store = new secure.FlutterSecureStorage();
 final BASE = 'http://127.0.0.1/';
 const myTask = "syncWithTheBackEnd";
-final prefs = null;
 String token;
-bool prof = false;
 bool loggedIn;
-DateTime expiry;
+
+Prefs prefs = new Prefs();
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,8 +44,12 @@ void callbackDispatcher() {
       case myTask:
         /*String t = await store.read(key: 'token');
         print(t);*/
+        var z = await prefs.getBool('loggedIn');
+        if (z == false) return true;
+        token = await prefs.getString('token');
         if (token != null) {
           DateTime curr = new DateTime.now();
+          DateTime expiry = DateTime.parse(await prefs.getString('expiry'));
           if (expiry.isAfter(curr)) {
             var url =
                 'https://back-dashboard.herokuapp.com/api/auth/refresh-token/';
@@ -54,16 +63,22 @@ void callbackDispatcher() {
             if (response.statusCode == 200) {
               var V = jsonDecode(response.body);
               token = V['token'];
+              prefs.addString('token', token);
               expiry = JwtDecoder.getExpirationDate(token);
+              prefs.addString('expiry', expiry.toIso8601String());
               loggedIn = true;
+              prefs.addBool('loggedIn', true);
               return true;
             } else {
+              prefs.addBool('loggedIn', false);
               loggedIn = false;
             }
           } else {
+            prefs.addBool('loggedIn', false);
             loggedIn = false;
           }
         } else {
+          prefs.addBool('loggedIn', false);
           loggedIn = false;
         }
         break;
@@ -89,7 +104,9 @@ class MyApp extends StatelessWidget {
         primaryColor: kPrimaryColor,
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: WelcomeScreen(),
+      home: new Scaffold(body: LoginScreen()),
     );
   }
 }
+
+bool z = true;
