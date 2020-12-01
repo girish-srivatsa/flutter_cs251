@@ -25,6 +25,7 @@ dependencies:
   jwt_decoder: ^1.0.3
   flutter_secure_storage: ^3.3.5
   workmanager: ^0.2.3
+  firebase_messaging: ^7.0.3
 
 
 

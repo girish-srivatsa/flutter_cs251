@@ -14,6 +14,7 @@ import 'Screens/CourseHome/messagewrapper.dart';
 import 'Screens/CourseHome/messageform.dart';
 import 'Screens/CourseHome/coursehome.dart';
 import 'Screens/CourseHome/messageTAform.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 final store = new secure.FlutterSecureStorage();
 final BASE = 'http://127.0.0.1/';
@@ -25,7 +26,7 @@ Prefs prefs = new Prefs();
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  Workmanager.initialize(callbackDispatcher, isInDebugMode: true);
+  Workmanager.initialize(callbackDispatcher);
   Workmanager.registerPeriodicTask(
     "1",
     myTask, //This is the value that will be returned in the callbackDispatcher
@@ -36,6 +37,8 @@ void main() {
     ),
     initialDelay: Duration(seconds: 60),
   );
+  final fbm = FirebaseMessaging();
+  fbm.requestNotificationPermissions();
   runApp(MyApp());
 }
 
