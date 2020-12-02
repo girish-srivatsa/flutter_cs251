@@ -25,8 +25,8 @@ final fbm = FirebaseMessaging();
 Prefs prefs = new Prefs();
 
 void main() {
-  /*WidgetsFlutterBinding.ensureInitialized();
-  Workmanager.initialize(callbackDispatcher);
+  WidgetsFlutterBinding.ensureInitialized();
+  /*Workmanager.initialize(callbackDispatcher);
   Workmanager.registerPeriodicTask(
     "1",
     myTask, //This is the value that will be returned in the callbackDispatcher
@@ -38,6 +38,16 @@ void main() {
     initialDelay: Duration(seconds: 60),
   );*/
   fbm.requestNotificationPermissions();
+  fbm.configure(onMessage: (msg) {
+    print(msg);
+    return;
+  }, onLaunch: (msg) {
+    print(msg);
+    return;
+  }, onResume: (msg) {
+    print(msg);
+    return;
+  });
   runApp(MyApp());
 }
 
