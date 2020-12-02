@@ -17,15 +17,15 @@ import 'Screens/CourseHome/messageTAform.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 final store = new secure.FlutterSecureStorage();
-final BASE = 'http://127.0.0.1/';
+final BASE = 'http://127.0.0.1:8000/';
 const myTask = "syncWithTheBackEnd";
 String token;
 bool loggedIn;
-
+final fbm = FirebaseMessaging();
 Prefs prefs = new Prefs();
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
+  /*WidgetsFlutterBinding.ensureInitialized();
   Workmanager.initialize(callbackDispatcher);
   Workmanager.registerPeriodicTask(
     "1",
@@ -36,8 +36,7 @@ void main() {
       networkType: NetworkType.connected,
     ),
     initialDelay: Duration(seconds: 60),
-  );
-  final fbm = FirebaseMessaging();
+  );*/
   fbm.requestNotificationPermissions();
   runApp(MyApp());
 }
@@ -55,8 +54,7 @@ void callbackDispatcher() {
           DateTime curr = new DateTime.now();
           DateTime expiry = DateTime.parse(await prefs.getString('expiry'));
           if (expiry.isAfter(curr)) {
-            var url =
-                'https://back-dashboard.herokuapp.com/api/auth/refresh-token/';
+            var url = 'http://127.0.0.1:8000/api/auth/refresh-token/';
             final response = await http.post(
               url,
               headers: <String, String>{

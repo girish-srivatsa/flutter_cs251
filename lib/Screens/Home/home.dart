@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../main.dart';
 import 'course.dart';
 import 'courseform.dart';
+import '../After-Login/logout.dart';
 import 'courselist.dart';
 
 import 'coursewrapper.dart';
@@ -20,7 +21,7 @@ import 'coursewrapper.dart';
 Future<List<Course>> getCourse() async {
   String tok = await prefs.getString('token');
   final response = await http.get(
-    'https://back-dashboard.herokuapp.com/api/courses/',
+    'http://127.0.0.1:8000/api/courses/',
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'JWT ' + tok,
@@ -64,7 +65,7 @@ class _HomePageState extends State<HomePage> {
   Future<Course> addCourse(String name, String code) async {
     String tok = await prefs.getString('token');
     final response = await http.post(
-      'https://back-dashboard.herokuapp.com/api/courses/',
+      'http://127.0.0.1:8000/api/courses/',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'JWT ' + tok,
@@ -125,6 +126,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget bar() {
-    return AppBar(title: Text("hello world"));
+    return AppBar(
+      title: Text("hello world"),
+      actions: [
+        LogoutButton(),
+      ],
+    );
   }
 }
