@@ -30,7 +30,7 @@ void logout(context) async {
   print(reg);
   print(tok);
   final response = await http.post(
-    'http://127.0.0.1:8000/api/regremove/',
+    'https://back-dashboard.herokuapp.com/api/regremove/',
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'JWT ' + tok,
