@@ -62,9 +62,11 @@ class Body extends StatelessWidget {
       );
       var U = jsonDecode(resp.body);
       if (U['is_professor']) {
+        print("Professor Here\n");
         prof = true;
         prefs.addBool('professor', true);
       } else {
+        print("No professor Here\n");
         prof = false;
         prefs.addBool('professor', false);
       }
@@ -118,6 +120,7 @@ class Body extends StatelessWidget {
                 print("\n\n");
                 print(eta);
                 beta.then((val) {
+                  print("Reached Here\n");
                   username = "";
                   password = "";
                   if (val) {
