@@ -32,7 +32,7 @@ class Body extends StatelessWidget {
 
   Future<bool> login(String username, String password) async {
     final response = await http.post(
-      'https://back-dashboard.herokuapp.com/api/auth/get-token/',
+      'http://127.0.0.1:8000/api/auth/get-token/',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -54,12 +54,24 @@ class Body extends StatelessWidget {
       print(expirationDate);
       prefs.addString('expiry', expirationDate.toIso8601String());
       final resp = await http.get(
-        'https://back-dashboard.herokuapp.com/api/usermy/',
+        'http://127.0.0.1:8000/api/usermy/',
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'JWT ' + tok,
         },
       );
+      String z = await fbm.getToken();
+      print('tok');
+      print(z);
+      final rs = await http.post(
+        'http://127.0.0.1:8000/api/regadd/',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'JWT ' + tok,
+        },
+        body: jsonEncode(<String, String>{"reg_id": z}),
+      );
+      print(rs.body);
       var U = jsonDecode(resp.body);
       if (U['is_professor']) {
         prof = true;
