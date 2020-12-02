@@ -18,7 +18,7 @@ import '../CourseHome/coursehome.dart';
 Future<Status> getStat(int id) async {
   String tok = await prefs.getString('token');
   final response = await http.get(
-    'http://127.0.0.1:8000/api/user/' + id.toString() + '/abc/',
+    'https://back-dashboard.herokuapp.com/api/user/' + id.toString() + '/abc/',
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'JWT ' + tok,

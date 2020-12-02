@@ -32,7 +32,7 @@ class Body extends StatelessWidget {
 
   Future<bool> login(String username, String password) async {
     final response = await http.post(
-      'http://127.0.0.1:8000/api/auth/get-token/',
+      'https://back-dashboard.herokuapp.comd.herokuapp.comd.herokuapp.comd.herokuapp.comd.herokuapp.com/api/auth/get-token/',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -54,7 +54,7 @@ class Body extends StatelessWidget {
       print(expirationDate);
       prefs.addString('expiry', expirationDate.toIso8601String());
       final resp = await http.get(
-        'http://127.0.0.1:8000/api/usermy/',
+        'https://back-dashboard.herokuapp.comd.herokuapp.comd.herokuapp.comd.herokuapp.comd.herokuapp.com/api/usermy/',
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'JWT ' + tok,
@@ -64,7 +64,7 @@ class Body extends StatelessWidget {
       print('tok');
       print(z);
       final rs = await http.post(
-        'http://127.0.0.1:8000/api/regadd/',
+        'https://back-dashboard.herokuapp.comd.herokuapp.comd.herokuapp.comd.herokuapp.comd.herokuapp.com/api/regadd/',
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'JWT ' + tok,

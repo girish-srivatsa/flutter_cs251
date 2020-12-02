@@ -17,7 +17,7 @@ import 'Screens/CourseHome/messageTAform.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 final store = new secure.FlutterSecureStorage();
-final BASE = 'http://127.0.0.1:8000/';
+final BASE = 'https://back-dashboard.herokuapp.com/';
 const myTask = "syncWithTheBackEnd";
 String token;
 bool loggedIn;
@@ -64,7 +64,8 @@ void callbackDispatcher() {
           DateTime curr = new DateTime.now();
           DateTime expiry = DateTime.parse(await prefs.getString('expiry'));
           if (expiry.isAfter(curr)) {
-            var url = 'http://127.0.0.1:8000/api/auth/refresh-token/';
+            var url =
+                'https://back-dashboard.herokuapp.com/api/auth/refresh-token/';
             final response = await http.post(
               url,
               headers: <String, String>{
