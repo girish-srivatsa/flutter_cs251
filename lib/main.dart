@@ -15,6 +15,8 @@ import 'Screens/CourseHome/messageform.dart';
 import 'Screens/CourseHome/coursehome.dart';
 import 'Screens/CourseHome/messageTAform.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:oktoast/oktoast.dart';
+import 'constants.dart';
 
 final store = new secure.FlutterSecureStorage();
 final BASE = 'https://back-dashboard.herokuapp.com/';
@@ -23,6 +25,33 @@ String token;
 bool loggedIn;
 final fbm = FirebaseMessaging();
 Prefs prefs = new Prefs();
+
+Future<void> _showMyDialog(context, String tit, String bod) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(tit),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text(bod),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Approve'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,86 +67,43 @@ void main() {
     initialDelay: Duration(seconds: 60),
   );*/
   fbm.requestNotificationPermissions();
+  fbm.getToken().then((val) => {print(val)});
   fbm.configure(onMessage: (msg) {
+    print('msg');
     print(msg);
+    print(Application.navKey.currentContext.size.aspectRatio);
+    print(Application.navKey.currentWidget);
+    var U = msg["notification"];
+    print(U);
+    _showMyDialog(Application.navKey.currentContext, U["title"], U["body"]);
     return;
   }, onLaunch: (msg) {
+    print('lnch');
     print(msg);
     return;
   }, onResume: (msg) {
+    print('rs');
     print(msg);
     return;
   });
   runApp(MyApp());
 }
 
-void callbackDispatcher() {
-  Workmanager.executeTask((task, inputData) async {
-    switch (task) {
-      case myTask:
-        /*String t = await store.read(key: 'token');
-        print(t);*/
-        var z = await prefs.getBool('loggedIn');
-        if (z == false) return true;
-        token = await prefs.getString('token');
-        if (token != null) {
-          DateTime curr = new DateTime.now();
-          DateTime expiry = DateTime.parse(await prefs.getString('expiry'));
-          if (expiry.isAfter(curr)) {
-            var url =
-                'https://back-dashboard.herokuapp.com/api/auth/refresh-token/';
-            final response = await http.post(
-              url,
-              headers: <String, String>{
-                'Content-Type': 'application/json; charset=UTF-8',
-              },
-              body: jsonEncode(<String, String>{'token': token}),
-            );
-            if (response.statusCode == 200) {
-              var V = jsonDecode(response.body);
-              token = V['token'];
-              prefs.addString('token', token);
-              expiry = JwtDecoder.getExpirationDate(token);
-              prefs.addString('expiry', expiry.toIso8601String());
-              loggedIn = true;
-              prefs.addBool('loggedIn', true);
-              return true;
-            } else {
-              prefs.addBool('loggedIn', false);
-              loggedIn = false;
-            }
-          } else {
-            prefs.addBool('loggedIn', false);
-            loggedIn = false;
-          }
-        } else {
-          prefs.addBool('loggedIn', false);
-          loggedIn = false;
-        }
-        break;
-      case Workmanager.iOSBackgroundTask:
-        print("iOS background fetch delegate ran");
-        return true;
-        break;
-    }
-
-    //Return true when the task executed successfully or not
-    return false;
-  });
-}
-
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Auth',
-      theme: ThemeData(
-        primaryColor: kPrimaryColor,
-        scaffoldBackgroundColor: Colors.white,
+    return OKToast(
+      child: MaterialApp(
+        navigatorKey: Application.navKey,
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Auth',
+        theme: ThemeData(
+          primaryColor: kPrimaryColor,
+          scaffoldBackgroundColor: Colors.white,
+        ),
+        home: new Scaffold(body: LoginScreen()),
       ),
-      home: new Scaffold(body: LoginScreen()),
     );
   }
 }
