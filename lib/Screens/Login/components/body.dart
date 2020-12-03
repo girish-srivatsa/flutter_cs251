@@ -136,7 +136,7 @@ class Body extends StatelessWidget {
                   username = "";
                   password = "";
                   if (val) {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => loggedIn

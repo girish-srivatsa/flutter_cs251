@@ -67,9 +67,7 @@ class _CourseHomePageState extends State<CourseHomePage> {
   Future<Message> addMessage(String message, String to) async {
     String tok = await prefs.getString('token');
     final response = await http.post(
-      'https://back-dashboard.herokuapp.com/api/messages/' +
-          this.widget.id.toString() +
-          '/',
+      'https://back-dashboard.herokuapp.com' + this.widget.id.toString() + '/',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'JWT ' + tok,
@@ -146,5 +144,5 @@ class _CourseHomePageState extends State<CourseHomePage> {
 }
 
 Widget bar() {
-  return AppBar(title: Text("hello world"));
+  return AppBar(title: Text("Notify Me!"));
 }

@@ -15,7 +15,6 @@ import 'Screens/CourseHome/messageform.dart';
 import 'Screens/CourseHome/coursehome.dart';
 import 'Screens/CourseHome/messageTAform.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:oktoast/oktoast.dart';
 import 'constants.dart';
 
 final store = new secure.FlutterSecureStorage();
@@ -25,6 +24,7 @@ String token;
 bool loggedIn;
 final fbm = FirebaseMessaging();
 Prefs prefs = new Prefs();
+final application = new Application();
 
 Future<void> _showMyDialog(context, String tit, String bod) async {
   return showDialog<void>(
@@ -93,17 +93,21 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return OKToast(
-      child: MaterialApp(
-        navigatorKey: Application.navKey,
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Auth',
-        theme: ThemeData(
-          primaryColor: kPrimaryColor,
-          scaffoldBackgroundColor: Colors.white,
-        ),
-        home: new Scaffold(body: LoginScreen()),
+    print("appkey = ");
+    print(Application.navKey);
+
+//  A non-null String must be provided to a Text widget.
+// 'package:flutter/src/widgets/text.dart':
+// Failed assertion: line 370 pos 10: 'data != null'
+    return MaterialApp(
+      navigatorKey: Application.navKey,
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Auth',
+      theme: ThemeData(
+        primaryColor: kPrimaryColor,
+        scaffoldBackgroundColor: Colors.white,
       ),
+      home: new Scaffold(body: LoginScreen()),
     );
   }
 }
