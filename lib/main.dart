@@ -26,13 +26,13 @@ bool loggedIn;
 final fbm = FirebaseMessaging();
 Prefs prefs = new Prefs();
 
-Future<void> _showMyDialog(context, String tit, String bod) async {
+Future<void> _showMyDialog(context, String bod) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text(tit),
+        title: Text('hi'),
         content: SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
@@ -75,7 +75,7 @@ void main() {
     print(Application.navKey.currentWidget);
     var U = msg["notification"];
     print(U);
-    _showMyDialog(Application.navKey.currentContext, U["title"], U["body"]);
+    _showMyDialog(Application.navKey.currentContext, U["body"]);
     return;
   }, onLaunch: (msg) {
     print('lnch');
