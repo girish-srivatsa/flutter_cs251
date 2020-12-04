@@ -6,3 +6,30 @@ const kPrimaryLightColor = Color(0xFFF1E6FF);
 class Application {
   static final navKey = new GlobalKey<NavigatorState>();
 }
+
+Object r;
+bool change = false;
+
+class AppBuilder extends StatefulWidget {
+  final Function(BuildContext) builder;
+
+  const AppBuilder({Key key, this.builder}) : super(key: key);
+
+  @override
+  AppBuilderState createState() => new AppBuilderState();
+
+  static AppBuilderState of(BuildContext context) {
+    return context.ancestorStateOfType(const TypeMatcher<AppBuilderState>());
+  }
+}
+
+class AppBuilderState extends State<AppBuilder> {
+  @override
+  Widget build(BuildContext context) {
+    return widget.builder(context);
+  }
+
+  void rebuild() {
+    setState(() {});
+  }
+}

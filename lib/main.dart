@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/Screens/Home/home.dart';
 import 'package:flutter_auth/Screens/Login/login_screen.dart';
 import 'package:flutter_auth/Screens/Welcome/welcome_screen.dart';
 import 'package:flutter_auth/constants.dart';
@@ -15,8 +16,10 @@ import 'Screens/CourseHome/messageform.dart';
 import 'Screens/CourseHome/coursehome.dart';
 import 'Screens/CourseHome/messageTAform.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:oktoast/oktoast.dart';
 import 'constants.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:oktoast/oktoast.dart';
 
 final store = new secure.FlutterSecureStorage();
 final BASE = 'https://back-dashboard.herokuapp.com/';
@@ -26,7 +29,14 @@ bool loggedIn;
 final fbm = FirebaseMessaging();
 Prefs prefs = new Prefs();
 
-Future<void> _showMyDialog(context, String bod) async {
+Future<void> _showMyDialog(context, String bod, bool pr) async {
+  FlutterRingtonePlayer.play(
+    android: AndroidSounds.notification,
+    ios: IosSounds.glass,
+    looping: pr, // Android only - API >= 28
+    volume: 0.1, // Android only - API >= 28
+    asAlarm: pr, // Android only - all APIs
+  );
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button!
@@ -44,7 +54,11 @@ Future<void> _showMyDialog(context, String bod) async {
           TextButton(
             child: Text('Approve'),
             onPressed: () {
+              if (pr) {
+                FlutterRingtonePlayer.stop();
+              }
               Navigator.of(context).pop();
+              Phoenix.rebirth(context);
             },
           ),
         ],
@@ -53,19 +67,8 @@ Future<void> _showMyDialog(context, String bod) async {
   );
 }
 
-void main() {
+Future<Null> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  /*Workmanager.initialize(callbackDispatcher);
-  Workmanager.registerPeriodicTask(
-    "1",
-    myTask, //This is the value that will be returned in the callbackDispatcher
-    frequency: Duration(minutes: 15),
-    constraints: Constraints(
-      requiresBatteryNotLow: true,
-      networkType: NetworkType.connected,
-    ),
-    initialDelay: Duration(seconds: 60),
-  );*/
   fbm.requestNotificationPermissions();
   fbm.getToken().then((val) => {print(val)});
   fbm.configure(onMessage: (msg) {
@@ -75,18 +78,101 @@ void main() {
     print(Application.navKey.currentWidget);
     var U = msg["notification"];
     print(U);
-    _showMyDialog(Application.navKey.currentContext, U["body"]);
+    bool prior = msg["data"]["priority"];
+    _showMyDialog(Application.navKey.currentContext, U["body"], prior);
     return;
   }, onLaunch: (msg) {
     print('lnch');
     print(msg);
+    var U = msg["data"];
+    print(U);
+    String p = msg["data"]["priority"];
+    bool prior;
+    if (p == "true") {
+      prior = true;
+    } else {
+      prior = false;
+    }
+    ToastFuture t = showToastWidget(
+      new AlertDialog(
+        title: Text('hi'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text(U["body"]),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Approve'),
+            onPressed: () {
+              if (prior) {
+                FlutterRingtonePlayer.stop();
+              }
+              dismissAllToast();
+              Phoenix.rebirth(Application.navKey.currentContext);
+            },
+          ),
+        ],
+      ),
+    );
+    //_showMyDialog(Application.navKey.currentContext, U["body"], prior);
+    showToast(U["body"]);
     return;
   }, onResume: (msg) {
     print('rs');
     print(msg);
+    var U = msg["data"];
+    print(U);
+    String p = msg["data"]["priority"];
+    bool prior;
+    if (p == "true") {
+      prior = true;
+    } else {
+      prior = false;
+    }
+    //_showMyDialog(Application.navKey.currentContext, U["body"], prior);
+    ToastFuture t = showToastWidget(
+      new AlertDialog(
+        title: Text('hi'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text(U["body"]),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Approve'),
+            onPressed: () {
+              if (prior) {
+                FlutterRingtonePlayer.stop();
+              }
+              dismissAllToast();
+              Phoenix.rebirth(Application.navKey.currentContext);
+            },
+          ),
+        ],
+      ),
+    );
     return;
   });
-  runApp(MyApp());
+  prefs.addBool('change', false);
+  bool z = await checkLogin();
+  bool p = await prefs.getBool('professor');
+  if (z) {
+    runApp(Phoenix(
+      child: MyHomeApp(
+        prof: p,
+      ),
+    ));
+  } else {
+    runApp(
+      Phoenix(child: MyApp()),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -103,6 +189,27 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
         ),
         home: new Scaffold(body: LoginScreen()),
+      ),
+    );
+  }
+}
+
+class MyHomeApp extends StatelessWidget {
+  // This widget is the root of your application.
+  final prof;
+  MyHomeApp({this.prof});
+  @override
+  Widget build(BuildContext context) {
+    return OKToast(
+      child: MaterialApp(
+        navigatorKey: Application.navKey,
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Auth',
+        theme: ThemeData(
+          primaryColor: kPrimaryColor,
+          scaffoldBackgroundColor: Colors.white,
+        ),
+        home: new Scaffold(body: HomePage(prof: prof)),
       ),
     );
   }

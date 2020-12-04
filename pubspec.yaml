@@ -26,7 +26,9 @@ dependencies:
   flutter_secure_storage: ^3.3.5
   workmanager: ^0.2.3
   firebase_messaging: ^7.0.3
-  oktoast: ^2.3.2 
+  oktoast: ^2.3.2
+  flutter_phoenix: ^0.1.0
+  flutter_ringtone_player: ^2.0.0
 
 
 

@@ -130,8 +130,6 @@ class Body extends StatelessWidget {
                 print("\n\n");
                 print(eta);
                 beta.then((val) {
-                  username = "";
-                  password = "";
                   if (val) {
                     Navigator.push(
                         context,
