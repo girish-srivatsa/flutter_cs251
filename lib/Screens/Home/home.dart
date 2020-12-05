@@ -126,25 +126,33 @@ class _HomePageState extends State<HomePage> {
       print('2');
       if (!this.done) print('3');
       print(this.done);
-      return Scaffold(
-          appBar: bar(),
-          body: Column(children: <Widget>[
-            Expanded(child: CourseList(this.courses, this.done)),
-            widget.prof
-                ? CourseWrapper(
-                    callback: newCourse,
-                  )
-                : Container(height: 0),
-          ]));
+
+      return new WillPopScope(
+        onWillPop: () async => false,
+        child: new Scaffold(
+            appBar: bar(),
+            body: Column(children: <Widget>[
+              Expanded(child: CourseList(this.courses, this.done)),
+              widget.prof
+                  ? CourseWrapper(
+                      callback: newCourse,
+                    )
+                  : Container(height: 0),
+            ])),
+      );
     }
   }
 
   Widget bar() {
     return AppBar(
-      title: Text("hello world"),
+      title: Text("Courses"),
       actions: [
         LogoutButton(),
       ],
+      leading: new IconButton(
+        icon: new Icon(Icons.ac_unit),
+        onPressed: null,
+      ),
     );
   }
 }
