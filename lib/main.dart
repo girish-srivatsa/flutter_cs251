@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_auth/Screens/Home/home.dart';
 import 'package:flutter_auth/Screens/Login/login_screen.dart';
 import 'package:flutter_auth/Screens/Welcome/welcome_screen.dart';
@@ -27,6 +28,21 @@ String token;
 bool loggedIn;
 final fbm = FirebaseMessaging();
 Prefs prefs = new Prefs();
+const MethodChannel _channel = MethodChannel('com.example.flutter_auth/1');
+Map<String, String> channelMap = {
+  "id": "MESSAGES",
+  "name": "MESSAGES",
+  "description": "hi"
+};
+
+void _createChannel() async {
+  try {
+    await _channel.invokeMethod('createNotificationChannel', channelMap);
+    print("2 work");
+  } on PlatformException catch (e) {
+    print(e);
+  }
+}
 
 Future<dynamic> _backgroundMessageHandler(Map<String, dynamic> message) {
   print("_backgroundMessageHandler");
@@ -85,6 +101,7 @@ Future<Null> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   fbm.requestNotificationPermissions();
   fbm.getToken().then((val) => {print(val)});
+  _createChannel();
   fbm.configure(onMessage: (msg) {
     print('msg');
     print(msg);
