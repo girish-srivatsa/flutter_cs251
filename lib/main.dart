@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_auth/Screens/Home/home.dart';
 import 'package:flutter_auth/Screens/Login/login_screen.dart';
 import 'package:flutter_auth/Screens/Welcome/welcome_screen.dart';
 import 'package:flutter_auth/constants.dart';
-import 'package:workmanager/workmanager.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as secure;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -28,6 +28,36 @@ String token;
 bool loggedIn;
 final fbm = FirebaseMessaging();
 Prefs prefs = new Prefs();
+const MethodChannel _channel = MethodChannel('com.example.flutter_auth/1');
+Map<String, String> channelMap = {
+  "id": "MESSAGES",
+  "name": "MESSAGES",
+  "description": "hi"
+};
+
+void _createChannel() async {
+  try {
+    await _channel.invokeMethod('createNotificationChannel', channelMap);
+    print("2 work");
+  } on PlatformException catch (e) {
+    print(e);
+  }
+}
+
+Future<dynamic> _backgroundMessageHandler(Map<String, dynamic> message) {
+  print("_backgroundMessageHandler");
+  if (message.containsKey('data')) {
+    // Handle data message
+    final dynamic data = message['data'];
+    print("_backgroundMessageHandler data: ${data}");
+  }
+
+  if (message.containsKey('notification')) {
+    // Handle notification message
+    final dynamic notification = message['notification'];
+    print("_backgroundMessageHandler notification: ${notification}");
+  }
+}
 
 Future<void> _showMyDialog(context, String bod, bool pr) async {
   FlutterRingtonePlayer.play(
@@ -71,6 +101,7 @@ Future<Null> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   fbm.requestNotificationPermissions();
   fbm.getToken().then((val) => {print(val)});
+  _createChannel();
   fbm.configure(onMessage: (msg) {
     print('msg');
     print(msg);
@@ -81,7 +112,9 @@ Future<Null> main() async {
     bool prior = msg["data"]["priority"];
     _showMyDialog(Application.navKey.currentContext, U["body"], prior);
     return;
-  }, onLaunch: (msg) {
+  },
+      //onBackgroundMessage: _backgroundMessageHandler,
+      onLaunch: (msg) async {
     print('lnch');
     print(msg);
     var U = msg["data"];
@@ -93,34 +126,12 @@ Future<Null> main() async {
     } else {
       prior = false;
     }
-    ToastFuture t = showToastWidget(
-      new AlertDialog(
-        title: Text('hi'),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: <Widget>[
-              Text(U["body"]),
-            ],
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Approve'),
-            onPressed: () {
-              if (prior) {
-                FlutterRingtonePlayer.stop();
-              }
-              dismissAllToast();
-              Phoenix.rebirth(Application.navKey.currentContext);
-            },
-          ),
-        ],
-      ),
-    );
-    //_showMyDialog(Application.navKey.currentContext, U["body"], prior);
-    showToast(U["body"]);
+
+    await Future.delayed(Duration(seconds: 10));
+    _showMyDialog(Application.navKey.currentContext, U["body"], prior);
+
     return;
-  }, onResume: (msg) {
+  }, onResume: (msg) async {
     print('rs');
     print(msg);
     var U = msg["data"];
@@ -132,32 +143,7 @@ Future<Null> main() async {
     } else {
       prior = false;
     }
-    //_showMyDialog(Application.navKey.currentContext, U["body"], prior);
-    ToastFuture t = showToastWidget(
-      new AlertDialog(
-        title: Text('hi'),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: <Widget>[
-              Text(U["body"]),
-            ],
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Approve'),
-            onPressed: () {
-              if (prior) {
-                FlutterRingtonePlayer.stop();
-              }
-              dismissAllToast();
-              Phoenix.rebirth(Application.navKey.currentContext);
-            },
-          ),
-        ],
-      ),
-    );
-    return;
+    _showMyDialog(Application.navKey.currentContext, U["body"], prior);
   });
   prefs.addBool('change', false);
   bool z = await checkLogin();

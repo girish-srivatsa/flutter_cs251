@@ -33,3 +33,12 @@ class AppBuilderState extends State<AppBuilder> {
     setState(() {});
   }
 }
+
+class TestNote extends StatelessWidget {
+  final String body;
+  TestNote({this.body});
+  @override
+  Widget build(BuildContext context) {
+    return Text(body);
+  }
+}
