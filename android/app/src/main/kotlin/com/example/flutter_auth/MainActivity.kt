@@ -21,7 +21,7 @@ import android.media.RingtoneManager
 class MainActivity: FlutterActivity() {
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine);
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger,"1").setMethodCallHandler {
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger,"com.example.flutter_auth/1").setMethodCallHandler {
             call, result ->
             if (call.method == "createNotificationChannel") {
                 val argData = call.arguments as java.util.HashMap<String, String>
