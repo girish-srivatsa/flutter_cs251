@@ -34,13 +34,13 @@ class _StudentAddState extends State<StudentAdd> {
     print('h');
     FocusScope.of(context).unfocus();
     String tok = await prefs.getString('token');
-    print('https://back-dashboard.herokuapp.com/api/user/' +
+    print('http://127.0.0.1:8000/api/user/' +
         this.widget.id.toString() +
         '/' +
         controller.text +
         '/');
     final response = await http.post(
-      'https://back-dashboard.herokuapp.com/api/user/' +
+      'http://127.0.0.1:8000/api/user/' +
           this.widget.id.toString() +
           '/' +
           controller.text +
@@ -61,13 +61,13 @@ class _StudentAddState extends State<StudentAdd> {
     print('h');
     FocusScope.of(context).unfocus();
     String tok = await prefs.getString('token');
-    print('https://back-dashboard.herokuapp.com/api/user/' +
+    print('http://127.0.0.1:8000/api/user/' +
         this.widget.id.toString() +
         '/' +
         controller.text +
         '/');
     final response = await http.post(
-      'https://back-dashboard.herokuapp.com/api/user/' +
+      'http://127.0.0.1:8000/api/user/' +
           this.widget.id.toString() +
           '/' +
           controller.text +

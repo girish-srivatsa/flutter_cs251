@@ -29,7 +29,7 @@ dependencies:
   flutter_phoenix: ^0.1.0
   flutter_ringtone_player: ^2.0.0
   flutter_local_notifications: ^3.0.1+7
-
+  assets_audio_player: ^2.0.13
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -55,6 +55,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/audios/
   #  - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
