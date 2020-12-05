@@ -15,7 +15,7 @@ import 'course.dart';
 import 'courseform.dart';
 import '../After-Login/logout.dart';
 import 'courselist.dart';
-
+import '../../constants.dart';
 import 'coursewrapper.dart';
 
 Future<List<Course>> getCourse() async {
@@ -99,6 +99,20 @@ class _HomePageState extends State<HomePage> {
       this.courses = l;
       done = true;
     });
+  }
+
+  void t() async {
+    bool ch = await prefs.getBool('change');
+    if (ch) {
+      getCourse().then((val) {
+        setState(() {
+          this.courses = val;
+          se(val);
+        });
+      });
+      ch = false;
+    }
+    prefs.addBool('change', ch);
   }
 
   @override

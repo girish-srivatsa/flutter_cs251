@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/After-Login/logged_out.dart';
 import 'package:flutter_auth/components/rounded_button.dart';
 import 'package:flutter_auth/components/rounded_input_field.dart';
+import 'package:flutter_auth/constants.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_auth/Screens/Login/components/ResponseR.dart';
@@ -18,6 +19,7 @@ import 'messagelist.dart';
 import 'addStud.dart';
 
 import 'messagewrapper.dart';
+import '../After-Login/logout.dart';
 
 Future<List<Message>> getMessage(int id) async {
   String tok = await prefs.getString('token');
@@ -107,6 +109,24 @@ class _CourseHomePageState extends State<CourseHomePage> {
         });
   }
 
+  void t() async {
+    print('in');
+    bool ch = await prefs.getBool('change');
+    print(ch);
+    if (ch) {
+      print('hi');
+      getMessage(this.widget.id).then((val) => {
+            setState(() {
+              this.messages = val;
+            })
+          });
+      ch = false;
+    }
+    prefs.addBool('change', false);
+    ch = await prefs.getBool('change');
+    print(ch);
+  }
+
   @override
   Widget build(BuildContext context) {
     print('2');
@@ -145,5 +165,10 @@ class _CourseHomePageState extends State<CourseHomePage> {
 }
 
 Widget bar() {
-  return AppBar(title: Text("Notify Me!"));
+  return AppBar(
+    title: Text("hello world"),
+    actions: [
+      LogoutButton(),
+    ],
+  );
 }
