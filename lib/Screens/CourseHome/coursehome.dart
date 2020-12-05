@@ -58,7 +58,7 @@ class _CourseHomePageState extends State<CourseHomePage> {
       addMessage(message, to).then((val) => {
             setState(() {
               print(val.from_username);
-              addm(val);
+              addm(val, messages);
             })
           });
     });
@@ -66,8 +66,9 @@ class _CourseHomePageState extends State<CourseHomePage> {
 
   Future<Message> addMessage(String message, String to) async {
     String tok = await prefs.getString('token');
+    // print("url ======== " + 'https://back-dashboard.herokuapp.com' + this.widget.id.toString() + '/');
     final response = await http.post(
-      'https://back-dashboard.herokuapp.com' + this.widget.id.toString() + '/',
+      'https://back-dashboard.herokuapp.com/api/messages/' + this.widget.id.toString() + '/',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'JWT ' + tok,
@@ -88,11 +89,11 @@ class _CourseHomePageState extends State<CourseHomePage> {
     }
   }
 
-  void addm(Message m) {
+  void addm(Message m, List<Message> msg) {
     if (m == null)
       return;
     else {
-      this.messages.add(m);
+      msg.add(m);
     }
   }
 
