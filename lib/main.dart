@@ -23,7 +23,7 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:oktoast/oktoast.dart';
 
 final store = new secure.FlutterSecureStorage();
-final BASE = 'http://127.0.0.1:8000/';
+final BASE = 'https://back-dashboard.herokuapp.com/';
 const myTask = "syncWithTheBackEnd";
 String token;
 bool loggedIn;

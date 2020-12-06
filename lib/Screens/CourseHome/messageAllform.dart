@@ -16,7 +16,7 @@ import 'messagelist.dart';
 import 'messagewrapper.dart';
 
 class MessageAllform extends StatefulWidget {
-  final Function(String, String) callback;
+  final Function(String, String, bool) callback;
   final Function() depressor;
   MessageAllform({this.callback, this.depressor});
   @override
@@ -24,6 +24,7 @@ class MessageAllform extends StatefulWidget {
 }
 
 class _MessageAllformState extends State<MessageAllform> {
+  bool z = false;
   final _formKey = GlobalKey<FormState>();
   final controller = new TextEditingController();
   @override
@@ -34,12 +35,13 @@ class _MessageAllformState extends State<MessageAllform> {
 
   void t() {
     FocusScope.of(context).unfocus();
-    widget.callback(controller.text, 'student');
+    widget.callback(controller.text, 'student', this.z);
     controller.clear();
   }
 
   @override
   Widget build(BuildContext context) {
+    print(controller.text);
     return new Form(
       key: _formKey,
       child: Column(
@@ -58,16 +60,34 @@ class _MessageAllformState extends State<MessageAllform> {
                 ],
               )),
           TextFormField(
-              controller: this.controller,
-              decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.message),
-                  labelText: "Give ur message to All",
-                  suffixIcon: IconButton(
+            controller: this.controller,
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.message),
+              labelText: "Give ur message to All",
+              suffixIcon: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  IconButton(
                     icon: Icon(Icons.send),
                     splashColor: Colors.blue,
                     tooltip: "post message",
                     onPressed: this.t,
-                  )))
+                  ),
+                  Switch(
+                    value: z,
+                    onChanged: (value) => {
+                      setState(() {
+                        this.z = value;
+                      })
+                    },
+                    activeColor: Colors.red,
+                    activeTrackColor: Colors.redAccent,
+                  ),
+                ],
+              ),
+            ),
+          )
         ],
       ),
     );

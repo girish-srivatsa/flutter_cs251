@@ -19,7 +19,7 @@ Future<http.Response> logout() async {
   String w = await store.read(key: 'expiry');
   DateTime expiry = DateTime.parse(w);
   DateTime curr = new DateTime.now();
-  var url = 'http://127.0.0.1:8000/api/auth/refresh-token/';
+  var url = 'https://back-dashboard.herokuapp.com/api/auth/refresh-token/';
   print(t);
   final response = await http.post(
     url,
@@ -42,7 +42,7 @@ Future<http.Response> logout() async {
     print('fail');
     await store.write(key: 'loggedIn', value: 'false');
   }
-  //var url = 'http://127.0.0.1:8000/api/auth/logout/' + tok + '/';
+  //var url = 'https://back-dashboard.herokuapp.com/api/auth/logout/' + tok + '/';
   //var alpha = await http.get(url);
   return response;
 }

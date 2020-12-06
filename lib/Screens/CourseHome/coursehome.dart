@@ -24,7 +24,7 @@ import '../After-Login/logout.dart';
 Future<List<Message>> getMessage(int id) async {
   String tok = await prefs.getString('token');
   final response = await http.get(
-    'http://127.0.0.1:8000/api/messages/' + id.toString() + '/',
+    'https://back-dashboard.herokuapp.com/api/messages/' + id.toString() + '/',
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'JWT ' + tok,
@@ -54,10 +54,10 @@ class _CourseHomePageState extends State<CourseHomePage> {
   List<Message> messages;
   bool done = true;
 
-  void newCourse(String message, String to) {
+  void newCourse(String message, String to, bool z) {
     print('h');
     this.setState(() {
-      addMessage(message, to).then((val) => {
+      addMessage(message, to, z).then((val) => {
             setState(() {
               print(val.from_username);
               addm(val, messages);
@@ -66,16 +66,25 @@ class _CourseHomePageState extends State<CourseHomePage> {
     });
   }
 
-  Future<Message> addMessage(String message, String to) async {
+  Future<Message> addMessage(String message, String to, bool z) async {
+    String t;
+    if (z) {
+      t = "true";
+    } else {
+      t = "false";
+    }
     String tok = await prefs.getString('token');
-    // print("url ======== " + 'http://127.0.0.1:8000' + this.widget.id.toString() + '/');
+    // print("url ======== " + 'https://back-dashboard.herokuapp.com' + this.widget.id.toString() + '/');
     final response = await http.post(
-      'http://127.0.0.1:8000/api/messages/' + this.widget.id.toString() + '/',
+      'https://back-dashboard.herokuapp.com/api/messages/' +
+          this.widget.id.toString() +
+          '/',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'JWT ' + tok,
       },
-      body: jsonEncode(<String, String>{"to": to, "message": message}),
+      body: jsonEncode(
+          <String, String>{"to": to, "message": message, "prior": t}),
     );
     if (response.statusCode == 200) {
       var V = jsonDecode(response.body);

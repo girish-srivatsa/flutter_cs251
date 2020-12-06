@@ -16,7 +16,7 @@ import 'messagelist.dart';
 import 'messagewrapper.dart';
 
 class MessageTAform extends StatefulWidget {
-  final Function(String, String) callback;
+  final Function(String, String, bool) callback;
   final Function() depressor;
   MessageTAform({this.callback, this.depressor});
   @override
@@ -24,6 +24,7 @@ class MessageTAform extends StatefulWidget {
 }
 
 class _MessageTAformState extends State<MessageTAform> {
+  bool z = false;
   final _formKey = GlobalKey<FormState>();
   final controller = new TextEditingController();
   @override
@@ -34,7 +35,7 @@ class _MessageTAformState extends State<MessageTAform> {
 
   void t() {
     FocusScope.of(context).unfocus();
-    widget.callback(controller.text, 'TA');
+    widget.callback(controller.text, 'TA', this.z);
     controller.clear();
   }
 
@@ -58,16 +59,34 @@ class _MessageTAformState extends State<MessageTAform> {
                 ],
               )),
           TextFormField(
-              controller: this.controller,
-              decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.message),
-                  labelText: "Give ur message to TA",
-                  suffixIcon: IconButton(
+            controller: this.controller,
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.message),
+              labelText: "Give ur message to TA",
+              suffixIcon: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  IconButton(
                     icon: Icon(Icons.send),
                     splashColor: Colors.blue,
                     tooltip: "post message",
                     onPressed: this.t,
-                  )))
+                  ),
+                  Switch(
+                    value: z,
+                    onChanged: (value) => {
+                      setState(() {
+                        this.z = value;
+                      })
+                    },
+                    activeColor: Colors.red,
+                    activeTrackColor: Colors.redAccent,
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
