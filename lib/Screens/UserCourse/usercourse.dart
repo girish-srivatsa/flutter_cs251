@@ -15,6 +15,8 @@ import '../../main.dart';
 import '../Home/coursestatus.dart';
 import '../ReadBy/user.dart';
 import '../After-Login/logout.dart';
+import '../../constants.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 Future<List<User>> getUsers(int id) async {
   String tok = await prefs.getString('token');
@@ -36,8 +38,9 @@ Future<List<User>> getUsers(int id) async {
 }
 
 class UserCourseList extends StatefulWidget {
+  final bool prof;
   final int id;
-  UserCourseList({this.id});
+  UserCourseList({this.prof, this.id});
   @override
   _UserCourseListState createState() => _UserCourseListState();
 }
@@ -54,6 +57,27 @@ class _UserCourseListState extends State<UserCourseList> {
             done = true;
           })
         });
+  }
+
+  void del(String username) async {
+    String tok = await prefs.getString('token');
+    print(username);
+    final response = await http.post(
+      'https://back-dashboard.herokuapp.com/api/usercourse/' +
+          this.widget.id.toString() +
+          '/',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'JWT ' + tok,
+      },
+      body: jsonEncode(
+        <String, String>{"username": username},
+      ),
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      Phoenix.rebirth(Application.navKey.currentContext);
+    }
   }
 
   @override
@@ -74,7 +98,19 @@ class _UserCourseListState extends State<UserCourseList> {
                     var message = this.users[index];
                     return Card(
                       child: ListTile(
-                        title: Text(message.username),
+                        title: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(message.username),
+                            ),
+                            this.widget.prof
+                                ? RaisedButton(
+                                    child: Text("delete"),
+                                    onPressed: () => {del(message.username)},
+                                  )
+                                : Container()
+                          ],
+                        ),
                       ),
                     );
                   },

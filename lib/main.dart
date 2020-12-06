@@ -21,6 +21,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'constants.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:oktoast/oktoast.dart';
+import 'Screens/Home/home.dart';
+import 'Screens/Home/acknowledgement.dart';
+import 'Screens/CourseHome/message.dart';
 
 final store = new secure.FlutterSecureStorage();
 final BASE = 'https://back-dashboard.herokuapp.com/';
@@ -61,35 +64,22 @@ Future<dynamic> _backgroundMessageHandler(Map<String, dynamic> message) {
     final dynamic priority = data['priority'];
     bool prior = (priority == "true") ? true : false;
     print(prior);
-    FlutterRingtonePlayer.play(
-      android: AndroidSounds.notification,
-      ios: IosSounds.glass,
-      looping: false, // Android only - API >= 28
-      volume: 1.0, // Android only - API >= 28
-      asAlarm: prior, // Android only - all APIs
-    );
-
+    if (prior == true) {
+      FlutterRingtonePlayer.play(
+        android: AndroidSounds.notification,
+        ios: IosSounds.glass,
+        looping: false, // Android only - API >= 28
+        volume: 1.0, // Android only - API >= 28
+        asAlarm: prior, // Android only - all APIs
+      );
+    }
     print("_backgroundMessageHandler data: $data");
   }
-
-  // if (message.containsKey('notification')) {
-  //   // Handle notification message
-  //   FlutterRingtonePlayer.play(
-  //     android: AndroidSounds.notification,
-  //     ios: IosSounds.glass,
-  //     looping: false, // Android only - API >= 28
-  //     volume: 1.0, // Android only - API >= 28
-  //     asAlarm: true, // Android only - all APIs
-  //   );
-
-  //   final dynamic notification = message['notification'];
-  //   print("_backgroundMessageHandler notification: ${notification}");
-  // }
-
   return Future<void>.value();
 }
 
-Future<void> _showMyDialog(context, String bod, bool pr, {bool pr1 = true} ) async {
+Future<void> _showMyDialog(context, String bod, bool pr,
+    {bool pr1 = true}) async {
   print("pr = ");
   print(pr);
   if (pr == true) {
@@ -101,8 +91,7 @@ Future<void> _showMyDialog(context, String bod, bool pr, {bool pr1 = true} ) asy
       asAlarm: true, // Android only - all APIs
     );
   } else {
-    if (pr1 == true) 
-      FlutterRingtonePlayer.playNotification();
+    if (pr1 == true) FlutterRingtonePlayer.playNotification();
     // FlutterRingtonePlayer.stop();
   }
   return showDialog<void>(
@@ -137,6 +126,24 @@ Future<void> _showMyDialog(context, String bod, bool pr, {bool pr1 = true} ) asy
 
 Future<Null> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChannels.lifecycle.setMessageHandler((message) async {
+    debugPrint('SystemChannel $message');
+    if (message == AppLifecycleState.resumed.toString()) {
+      print("hi");
+      Phoenix.rebirth(Application.navKey.currentContext);
+      List<Message> msg = await getUnreadMessage();
+      if (msg.length != 0) {
+        Navigator.push(
+          Application.navKey.currentContext,
+          MaterialPageRoute(
+            builder: (context) {
+              return AcknowledgementPage(messages: msg);
+            },
+          ),
+        );
+      }
+    }
+  });
   fbm.requestNotificationPermissions();
   fbm.getToken().then((val) => {print(val)});
   _createChannel();
@@ -175,10 +182,7 @@ Future<Null> main() async {
         } else {
           prior = false;
         }
-
-        await Future.delayed(Duration(seconds: 10));
-        _showMyDialog(Application.navKey.currentContext, U["body"], prior);
-
+        // _showMyDialog(Application.navKey.currentContext, U["body"], prior);
         return;
       },
       onResume: (msg) async {
@@ -193,7 +197,7 @@ Future<Null> main() async {
         } else {
           prior = false;
         }
-        _showMyDialog(Application.navKey.currentContext, U["body"], prior, pr1:prior);
+        // _showMyDialog(Application.navKey.currentContext, U["body"], prior, pr1:prior);
       });
   prefs.addBool('change', false);
   bool z = await checkLogin();

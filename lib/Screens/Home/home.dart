@@ -116,6 +116,7 @@ class _HomePageState extends State<HomePage> {
     });
     getUnreadMessage().then((val) {
       if (val.length != 0) {
+        print("in");
         Navigator.push(
           Application.navKey.currentContext,
           MaterialPageRoute(
@@ -166,7 +167,12 @@ class _HomePageState extends State<HomePage> {
         child: new Scaffold(
             appBar: bar(),
             body: Column(children: <Widget>[
-              Expanded(child: CourseList(this.courses, this.done)),
+              Expanded(
+                  child: CourseList(
+                courses: this.courses,
+                done: this.done,
+                prof: this.widget.prof,
+              )),
               widget.prof
                   ? CourseWrapper(
                       callback: newCourse,

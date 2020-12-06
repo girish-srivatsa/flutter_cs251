@@ -35,9 +35,10 @@ Future<Status> getStat(int id) async {
 }
 
 class CourseList extends StatefulWidget {
+  final bool prof;
   final List<Course> courses;
   final bool done;
-  CourseList(this.courses, this.done);
+  CourseList({this.courses, this.done, this.prof});
   @override
   _CourseListState createState() => _CourseListState();
 }
@@ -98,6 +99,7 @@ class _CourseListState extends State<CourseList> {
                                   MaterialPageRoute(
                                     builder: (context) {
                                       return UserCourseList(
+                                        prof:this.widget.prof,
                                         id: course.id,
                                       );
                                     },
