@@ -64,7 +64,7 @@ Future<dynamic> _backgroundMessageHandler(Map<String, dynamic> message) {
     FlutterRingtonePlayer.play(
       android: AndroidSounds.notification,
       ios: IosSounds.glass,
-      looping: prior, // Android only - API >= 28
+      looping: false, // Android only - API >= 28
       volume: 1.0, // Android only - API >= 28
       asAlarm: prior, // Android only - all APIs
     );
@@ -72,36 +72,37 @@ Future<dynamic> _backgroundMessageHandler(Map<String, dynamic> message) {
     print("_backgroundMessageHandler data: $data");
   }
 
-  if (message.containsKey('notification')) {
-    // Handle notification message
-    FlutterRingtonePlayer.play(
-      android: AndroidSounds.notification,
-      ios: IosSounds.glass,
-      looping: true, // Android only - API >= 28
-      volume: 1.0, // Android only - API >= 28
-      asAlarm: true, // Android only - all APIs
-    );
+  // if (message.containsKey('notification')) {
+  //   // Handle notification message
+  //   FlutterRingtonePlayer.play(
+  //     android: AndroidSounds.notification,
+  //     ios: IosSounds.glass,
+  //     looping: false, // Android only - API >= 28
+  //     volume: 1.0, // Android only - API >= 28
+  //     asAlarm: true, // Android only - all APIs
+  //   );
 
-    final dynamic notification = message['notification'];
-    print("_backgroundMessageHandler notification: ${notification}");
-  }
+  //   final dynamic notification = message['notification'];
+  //   print("_backgroundMessageHandler notification: ${notification}");
+  // }
 
   return Future<void>.value();
 }
 
-Future<void> _showMyDialog(context, String bod, bool pr) async {
+Future<void> _showMyDialog(context, String bod, bool pr, {bool pr1 = true} ) async {
   print("pr = ");
   print(pr);
   if (pr == true) {
     FlutterRingtonePlayer.play(
       android: AndroidSounds.notification,
       ios: IosSounds.glass,
-      looping: true, // Android only - API >= 28
+      looping: false, // Android only - API >= 28
       volume: 1, // Android only - API >= 28
       asAlarm: true, // Android only - all APIs
     );
   } else {
-    FlutterRingtonePlayer.playNotification();
+    if (pr1 == true) 
+      FlutterRingtonePlayer.playNotification();
     // FlutterRingtonePlayer.stop();
   }
   return showDialog<void>(
@@ -192,7 +193,7 @@ Future<Null> main() async {
         } else {
           prior = false;
         }
-        _showMyDialog(Application.navKey.currentContext, U["body"], prior);
+        _showMyDialog(Application.navKey.currentContext, U["body"], prior, pr1:prior);
       });
   prefs.addBool('change', false);
   bool z = await checkLogin();

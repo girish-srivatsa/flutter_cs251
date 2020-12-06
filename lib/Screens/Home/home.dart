@@ -16,6 +16,9 @@ import 'courseform.dart';
 import '../After-Login/logout.dart';
 import 'courselist.dart';
 import '../../constants.dart';
+import '../CourseHome/coursehome.dart';
+import '../CourseHome/message.dart';
+import 'acknowledgement.dart';
 import 'coursewrapper.dart';
 import '../UserCourse/usercourse.dart';
 
@@ -35,6 +38,23 @@ Future<List<Course>> getCourse() async {
   }
 }
 
+Future<List<Message>> getUnreadMessage() async {
+  String tok = await prefs.getString('token');
+  final response = await http.get(
+    'https://back-dashboard.herokuapp.com/api/unread/',
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'JWT ' + tok,
+    },
+  );
+  if (response.statusCode == 200) {
+    var V = jsonDecode(response.body) as List;
+    List<Message> cs = V.map((message) => Message.fromJson(message)).toList();
+    return cs;
+  } else
+    return null;
+}
+
 class HomePage extends StatefulWidget {
   bool prof;
   HomePage({this.prof});
@@ -44,6 +64,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Course> courses;
+  List<Message> unreadMessages;
   bool done = false;
 
   void newCourse(String name, String code) {
@@ -92,6 +113,16 @@ class _HomePageState extends State<HomePage> {
         this.courses = val;
         se(val);
       });
+    });
+    getUnreadMessage().then((val) {
+      Navigator.push(
+        Application.navKey.currentContext,
+        MaterialPageRoute(
+          builder: (context) {
+            return AcknowledgementPage(messages: val);
+          },
+        ),
+      );
     });
   }
 
