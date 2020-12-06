@@ -17,7 +17,7 @@ import 'messageAllform.dart';
 import 'messageTAform.dart';
 
 class MessageWrapper extends StatefulWidget {
-  final Function(String, String) callback;
+  final Function(String, String, bool) callback;
   final String stat;
   MessageWrapper({this.stat, this.callback});
   @override

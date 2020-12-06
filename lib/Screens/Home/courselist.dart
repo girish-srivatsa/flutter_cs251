@@ -14,6 +14,7 @@ import '../../main.dart';
 import './course.dart';
 import 'coursestatus.dart';
 import '../CourseHome/coursehome.dart';
+import '../UserCourse/usercourse.dart';
 
 Future<Status> getStat(int id) async {
   String tok = await prefs.getString('token');
@@ -67,28 +68,47 @@ class _CourseListState extends State<CourseList> {
               var course = this.widget.courses[index];
               return InkWell(
                   onTap: () => {
-                        getStat(course.id).then((val) => {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return CourseHomePage(
-                                      stat: val.status,
-                                      id: course.id,
-                                    );
-                                  },
-                                ),
-                              )
-                            })
+                        getStat(course.id).then(
+                          (val) => {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return CourseHomePage(
+                                    stat: val.status,
+                                    id: course.id,
+                                  );
+                                },
+                              ),
+                            ),
+                          },
+                        )
                       },
                   child: Card(
                     child: Row(
                       children: <Widget>[
                         Expanded(
-                            child: ListTile(
-                          title: Text(course.name),
-                          subtitle: Text(course.code),
-                        )),
+                          child: ListTile(
+                            title: Text(course.name),
+                            subtitle: Text(course.code),
+                            trailing: RaisedButton(
+                              onPressed: () => {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return UserCourseList(
+                                        id: course.id,
+                                      );
+                                    },
+                                  ),
+                                )
+                              },
+                              color: Colors.blue,
+                              child: Text('members'),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ));
