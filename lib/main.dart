@@ -51,27 +51,30 @@ void _createChannel() async {
 
 Future<dynamic> _backgroundMessageHandler(Map<String, dynamic> message) async {
   int filter = await FlutterDnd.getCurrentInterruptionFilter();
-  if (filter != 1) return null;
-  print("_backgroundMessageHandler");
-  if (message.containsKey('data')) {
-    // Handle data message
-    final dynamic data = message['data'];
-    debugPrint("data here......");
-    final dynamic priority = data['priority'];
-    bool prior = (priority == "true") ? true : false;
-    print(prior);
-    if (prior == true) {
-      FlutterRingtonePlayer.play(
-        android: AndroidSounds.notification,
-        ios: IosSounds.glass,
-        looping: false, // Android only - API >= 28
-        volume: 1.0, // Android only - API >= 28
-        asAlarm: prior, // Android only - all APIs
-      );
+  String filterName = FlutterDnd.getFilterName(filter);
+  print("filtername = $filterName");  
+  print("filter = $filter");
+  if (filter == 1) {
+    print("_backgroundMessageHandler");
+    if (message.containsKey('data')) {
+      // Handle data message
+      final dynamic data = message['data'];
+      debugPrint("data here......");
+      final dynamic priority = data['priority'];
+      bool prior = (priority == "true") ? true : false;
+      print(prior);
+      if (prior == true) {
+        FlutterRingtonePlayer.play(
+          android: AndroidSounds.notification,
+          ios: IosSounds.glass,
+          looping: false, // Android only - API >= 28
+          volume: 1.0, // Android only - API >= 28
+          asAlarm: prior, // Android only - all APIs
+        );
+      }
+      print("_backgroundMessageHandler data: $data");
     }
-    print("_backgroundMessageHandler data: $data");
   }
-  return Future<void>.value();
 }
 
 Future<void> _showMyDialog(context, String bod, bool pr,
