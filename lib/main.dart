@@ -23,7 +23,7 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:oktoast/oktoast.dart';
 
 final store = new secure.FlutterSecureStorage();
-final BASE = 'http://127.0.0.1:8000/';
+final BASE = 'https://back-dashboard.herokuapp.com/';
 const myTask = "syncWithTheBackEnd";
 String token;
 bool loggedIn;
@@ -58,13 +58,15 @@ Future<dynamic> _backgroundMessageHandler(Map<String, dynamic> message) {
     // Handle data message
     final dynamic data = message['data'];
     debugPrint("data here......");
-    // final dynamic priority = data['priority'];
+    final dynamic priority = data['priority'];
+    bool prior = (priority == "true") ? true : false;
+    print(prior);
     FlutterRingtonePlayer.play(
       android: AndroidSounds.notification,
       ios: IosSounds.glass,
-      looping: false, // Android only - API >= 28
+      looping: prior, // Android only - API >= 28
       volume: 1.0, // Android only - API >= 28
-      asAlarm: true, // Android only - all APIs
+      asAlarm: prior, // Android only - all APIs
     );
 
     print("_backgroundMessageHandler data: $data");
@@ -98,15 +100,8 @@ Future<void> _showMyDialog(context, String bod, bool pr) async {
       volume: 1, // Android only - API >= 28
       asAlarm: true, // Android only - all APIs
     );
-    // FlutterRingtonePlayer.stop();
   } else {
-    FlutterRingtonePlayer.play(
-      android: AndroidSounds.notification,
-      ios: IosSounds.glass,
-      looping: false, // Android only - API >= 28
-      volume: 1, // Android only - API >= 28
-      asAlarm: false, // Android only - all APIs
-    );
+    FlutterRingtonePlayer.playNotification();
     // FlutterRingtonePlayer.stop();
   }
   return showDialog<void>(

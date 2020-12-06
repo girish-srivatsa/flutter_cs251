@@ -24,7 +24,7 @@ import '../After-Login/logout.dart';
 Future<List<Message>> getMessage(int id) async {
   String tok = await prefs.getString('token');
   final response = await http.get(
-    'http://127.0.0.1:8000/api/messages/' + id.toString() + '/',
+    'https://back-dashboard.herokuapp.com/api/messages/' + id.toString() + '/',
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'JWT ' + tok,
@@ -68,9 +68,11 @@ class _CourseHomePageState extends State<CourseHomePage> {
 
   Future<Message> addMessage(String message, String to) async {
     String tok = await prefs.getString('token');
-    // print("url ======== " + 'http://127.0.0.1:8000' + this.widget.id.toString() + '/');
+    // print("url ======== " + 'https://back-dashboard.herokuapp.com' + this.widget.id.toString() + '/');
     final response = await http.post(
-      'http://127.0.0.1:8000/api/messages/' + this.widget.id.toString() + '/',
+      'https://back-dashboard.herokuapp.com/api/messages/' +
+          this.widget.id.toString() +
+          '/',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'JWT ' + tok,
