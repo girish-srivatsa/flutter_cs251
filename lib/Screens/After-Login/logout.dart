@@ -55,7 +55,7 @@ class LogoutButton extends StatefulWidget {
 }
 
 class _LogoutButtonState extends State<LogoutButton> {
-  ///Widget for Logout Button, uses RaisedButton and invokes LogOut Function.
+  ///Widget for Logout Button, uses RaisedButton and invokes logout Function.
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
