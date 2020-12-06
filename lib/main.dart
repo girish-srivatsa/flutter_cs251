@@ -24,6 +24,8 @@ import 'package:oktoast/oktoast.dart';
 import 'Screens/Home/home.dart';
 import 'Screens/Home/acknowledgement.dart';
 import 'Screens/CourseHome/message.dart';
+import 'package:flutter_dnd/flutter_dnd.dart';
+
 
 final store = new secure.FlutterSecureStorage();
 final BASE = 'https://back-dashboard.herokuapp.com/';
@@ -48,14 +50,9 @@ void _createChannel() async {
   }
 }
 
-Future<dynamic> _backgroundMessageHandler(Map<String, dynamic> message) {
-  // final assetsAudioPlayer = AssetsAudioPlayer();
-
-  // assetsAudioPlayer.open(
-  //     Audio("assets/audios/alarm.mp3"),
-  // );
-
-  // print("-----------------------------sound played---------------------------------");
+Future<dynamic> _backgroundMessageHandler(Map<String, dynamic> message) async {
+  int filter = await FlutterDnd.getCurrentInterruptionFilter();
+  if (filter != 1) return null;
   print("_backgroundMessageHandler");
   if (message.containsKey('data')) {
     // Handle data message
@@ -80,6 +77,8 @@ Future<dynamic> _backgroundMessageHandler(Map<String, dynamic> message) {
 
 Future<void> _showMyDialog(context, String bod, bool pr,
     {bool pr1 = true}) async {
+  // int filter = await FlutterDnd.getCurrentInterruptionFilter();
+  // if (filter != 1) return null;
   print("pr = ");
   print(pr);
   if (pr == true) {

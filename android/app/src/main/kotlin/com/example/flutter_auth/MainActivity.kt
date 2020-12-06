@@ -47,7 +47,7 @@ class MainActivity: FlutterActivity() {
             val mChannel=NotificationChannel(id,name,importance)
             mChannel.description=descriptionText
             mChannel.enableVibration(true)
-            mChannel.setBypassDnd(true)
+            mChannel.setBypassDnd(false)
             val alarmTone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
             val att=AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_ALARM)
