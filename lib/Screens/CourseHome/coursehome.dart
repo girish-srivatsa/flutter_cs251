@@ -104,7 +104,7 @@ class _CourseHomePageState extends State<CourseHomePage> {
     if (m == null)
       return;
     else {
-      msg.add(m);
+      msg.insert(0, m);
     }
   }
 

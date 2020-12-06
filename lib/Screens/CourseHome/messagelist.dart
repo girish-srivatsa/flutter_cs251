@@ -12,6 +12,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart' as secure;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../main.dart';
 import './message.dart';
+import '../ReadBy/readby.dart';
 
 class MessageList extends StatefulWidget {
   final List<Message> messages;
@@ -30,10 +31,20 @@ class _MessageListState extends State<MessageList> {
             itemCount: this.widget.messages.length,
             itemBuilder: (context, index) {
               var message = this.widget.messages[index];
-              return Card(
-                child: ListTile(
-                  title: Text(message.message),
-                  subtitle: Text(message.from_username),
+              return InkWell(
+                onTap: () => {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UserList(message.id),
+                    ),
+                  )
+                },
+                child: Card(
+                  child: ListTile(
+                    title: Text(message.message),
+                    subtitle: Text(message.from_username),
+                  ),
                 ),
               );
             },
