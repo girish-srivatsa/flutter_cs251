@@ -50,6 +50,9 @@ class Body extends StatelessWidget {
       prefs.addString('token', tok);
       print(tok);
       prefs.addString('username', username);
+      print("addString: ");
+      print(username + '1');
+      print("addString----------");
       DateTime expirationDate = JwtDecoder.getExpirationDate(tok);
       print(expirationDate);
       prefs.addString('expiry', expirationDate.toIso8601String());

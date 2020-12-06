@@ -27,6 +27,8 @@ class _AcknowledgementPageState extends State<AcknowledgementPage> {
     String tok = await prefs.getString('token');
     print(tok);
     String username = await prefs.getString('username');
+    print("username = ");
+    print(username + '1');
     print("len = ");
     print(this.widget.messages.length);
     for (var i = 0; i < this.widget.messages.length; ++i) {
@@ -79,6 +81,7 @@ class _MessageListState extends State<MessageList> {
       itemBuilder: (context, index) {
         var message = this.widget.messages[index];
         print('message null???:--------------------');
+        print(message.from_username);
         print(message.message == null);
         print(message.message);
         print('message:--------------------');
@@ -86,7 +89,8 @@ class _MessageListState extends State<MessageList> {
         return Card(
           child: ListTile(
             title: Text(message.message == null ? "" : message.message),
-            subtitle: Text(message.from_username),
+            subtitle: Text(
+                message.from_username == null ? " " : message.from_username),
           ),
         );
       },

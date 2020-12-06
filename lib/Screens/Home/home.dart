@@ -115,14 +115,16 @@ class _HomePageState extends State<HomePage> {
       });
     });
     getUnreadMessage().then((val) {
-      Navigator.push(
-        Application.navKey.currentContext,
-        MaterialPageRoute(
-          builder: (context) {
-            return AcknowledgementPage(messages: val);
-          },
-        ),
-      );
+      if (val.length != 0) {
+        Navigator.push(
+          Application.navKey.currentContext,
+          MaterialPageRoute(
+            builder: (context) {
+              return AcknowledgementPage(messages: val);
+            },
+          ),
+        );
+      }
     });
   }
 
