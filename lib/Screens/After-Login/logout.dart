@@ -22,6 +22,8 @@ import '../../main.dart';
 import '../../function.dart';
 import '../CourseHome/coursehome.dart';
 
+///This Function Logs the user out, redirects backend to remove the token,
+/// and directs user to LoginScreen.
 void logout(context) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String tok = await prefs.getString('token');
@@ -46,12 +48,14 @@ void logout(context) async {
   );
 }
 
+///The StatefulWidget for LogoutButton
 class LogoutButton extends StatefulWidget {
   @override
   _LogoutButtonState createState() => _LogoutButtonState();
 }
 
 class _LogoutButtonState extends State<LogoutButton> {
+  ///Widget for Logout Button, uses RaisedButton and invokes LogOut Function.
   @override
   Widget build(BuildContext context) {
     return RaisedButton(

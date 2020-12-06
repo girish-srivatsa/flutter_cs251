@@ -22,6 +22,7 @@ import '../../../main.dart';
 import '../../../function.dart';
 import '../../CourseHome/coursehome.dart';
 
+///Variable to keep track of if the user is a professor or a student.
 bool prof = false;
 
 class Body extends StatelessWidget {
@@ -29,7 +30,9 @@ class Body extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
+  ///A function that logs in user with [username] and [password]
   Future<bool> login(String username, String password) async {
+    ///Await ServerResponse on login attempt
     final response = await http.post(
       'https://back-dashboard.herokuapp.com/api/auth/get-token/',
       headers: <String, String>{
@@ -39,10 +42,7 @@ class Body extends StatelessWidget {
           <String, String>{"username": username, "password": password}),
     );
     if (response.statusCode == 200) {
-      // If the server did return a 200 CREATED response,
-      // then parse the JSON.
-      print("4\n");
-      print(response.body);
+      /// If the server did return a 200 CREATED response, then parse the JSON.
       var V = jsonDecode(response.body);
       String tok = V['token'];
       token = tok;
@@ -52,6 +52,8 @@ class Body extends StatelessWidget {
       print("addString: ");
       print(username + '1');
       print("addString----------");
+
+      ///Determine if token is expired or not
       DateTime expirationDate = JwtDecoder.getExpirationDate(tok);
       print(expirationDate);
       prefs.addString('expiry', expirationDate.toIso8601String());
@@ -62,6 +64,8 @@ class Body extends StatelessWidget {
           'Authorization': 'JWT ' + tok,
         },
       );
+
+      ///Getting token from FirebaseMessaging
       String z = await fbm.getToken();
       print('tok');
       print(z);
@@ -75,6 +79,8 @@ class Body extends StatelessWidget {
       );
       print(rs.body);
       var U = jsonDecode(resp.body);
+
+      ///Differentiate between users if Professor or Not
       if (U['is_professor']) {
         print("Professor Here\n");
         prof = true;
@@ -84,17 +90,22 @@ class Body extends StatelessWidget {
         prof = false;
         prefs.addBool('professor', false);
       }
+
+      ///Set LoggedIn to true
       prefs.addBool('loggedIn', true);
       loggedIn = true;
       return Future.value(true);
-    } else {
-      //print(response.body);
+    }
+
+    ///If Login is not successful, indicate that
+    else {
       prefs.addBool('loggedIn', false);
       loggedIn = false;
       return Future.value(false);
     }
   }
 
+  ///Widget containing the UI
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -103,29 +114,38 @@ class Body extends StatelessWidget {
     return Background(
       child: SingleChildScrollView(
         child: Column(
+          ///Ensure Proper Alignment
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
+              ///Heading of the Page
               "LOGIN",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
             SizedBox(height: size.height * 0.03),
             SvgPicture.asset(
+              ///A Nice Picture for enhanced UX
               "assets/icons/login.svg",
               height: size.height * 0.35,
             ),
             SizedBox(height: size.height * 0.03),
+
+            ///Input Field for Username
             RoundedInputField(
               hintText: "Your Username",
               onChanged: (String value) {
                 username = value;
               },
             ),
+
+            ///Input Field for Username
             RoundedPasswordField(
               onChanged: (String value) {
                 password = value;
               },
             ),
+
+            ///Button for Action of Login. Invokes login function and redirects to Courses-Homepage.
             RoundedButton(
               text: "LOGIN ",
               press: () {
