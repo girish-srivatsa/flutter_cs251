@@ -1,9 +1,6 @@
-import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:flutter/material.dart';
-import './Screens/Login/login_screen.dart';
 
 ///This Class facilitates interface for values stored in Local Storage of user's device
 class Prefs {

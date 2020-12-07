@@ -1,5 +1,3 @@
-import 'course.dart';
-
 class Status {
   int course;
   String status;

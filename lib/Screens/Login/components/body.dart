@@ -1,26 +1,15 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/Screens/After-Login/after.dart';
 import 'package:flutter_auth/Screens/Home/home.dart';
-import 'package:flutter_auth/Screens/Login/components/ResponseR.dart';
 import 'package:flutter_auth/Screens/Login/components/background.dart';
 import 'package:flutter_auth/Screens/Login/login_screen.dart';
-import 'package:flutter_auth/components/already_have_an_account_acheck.dart';
 import 'package:flutter_auth/components/rounded_button.dart';
 import 'package:flutter_auth/components/rounded_input_field.dart';
 import 'package:flutter_auth/components/rounded_password_field.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:uuid/uuid.dart';
-import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart' as secure;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import '../../../main.dart';
-import '../../../function.dart';
-import '../../CourseHome/coursehome.dart';
 
 ///Variable to keep track of if the user is a professor or a student.
 bool prof = false;
