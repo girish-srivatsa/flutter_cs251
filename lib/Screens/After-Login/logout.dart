@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../main.dart';
 
 ///This Function Logs the user out, redirects backend to remove the token,
-/// and directs user to LoginScreen.
+///and directs user to LoginScreen.
 void logout(context) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String tok = await prefs.getString('token');
@@ -42,8 +42,42 @@ class _LogoutButtonState extends State<LogoutButton> {
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
-      onPressed: () => {logout(context)},
+      onPressed: () => {showAlertDialog(context)},
       child: Text('Logout'),
     );
   }
+}
+
+showAlertDialog(BuildContext context) {
+  // set up the buttons
+  Widget cancelButton = FlatButton(
+    child: Text("No"),
+    onPressed: () {
+      Navigator.of(context, rootNavigator: true).pop();
+    },
+  );
+  Widget continueButton = FlatButton(
+    child: Text("Yes"),
+    onPressed: () {
+      logout(context);
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Confirmation"),
+    content: Text("Do you really want to Logout?"),
+    actions: [
+      cancelButton,
+      continueButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }
