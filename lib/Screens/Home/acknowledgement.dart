@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 import 'dart:convert';
 import '../../main.dart';
-import '../CourseHome/message.dart';
+import 'message-read.dart';
 import '../../constants.dart';
 
 ///The Parent class for the State AcknowledgementPageState.
@@ -88,9 +88,9 @@ class _MessageListState extends State<MessageList> {
 
         return Card(
           child: ListTile(
-            title: Text(message.message == null ? "" : message.message),
-            subtitle: Text(
-                message.from_username == null ? " " : message.from_username),
+            subtitle: Text(message.message == null ? "" : message.message),
+            title:
+                Text(message.course_name == null ? " " : message.course_name),
           ),
         );
       },

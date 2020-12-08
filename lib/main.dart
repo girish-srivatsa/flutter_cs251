@@ -14,7 +14,7 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:oktoast/oktoast.dart';
 import 'Screens/Home/home.dart';
 import 'Screens/Home/acknowledgement.dart';
-import 'Screens/CourseHome/message.dart';
+import 'Screens/Home/message-read.dart';
 import 'package:flutter_dnd/flutter_dnd.dart';
 
 ///Variable to facilitate interaction with local storage.

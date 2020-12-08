@@ -8,7 +8,7 @@ import 'course.dart';
 import '../After-Login/logout.dart';
 import 'courselist.dart';
 import '../../constants.dart';
-import '../CourseHome/message.dart';
+import 'message-read.dart';
 import 'acknowledgement.dart';
 import 'coursewrapper.dart';
 
