@@ -23,11 +23,12 @@ void logout(context) async {
   );
   print(response.body);
   prefs.clear();
-  Navigator.push(
+  Navigator.pushAndRemoveUntil(
     context,
     MaterialPageRoute(
       builder: (context) => LoginScreen(),
     ),
+    (e) => false,
   );
 }
 
