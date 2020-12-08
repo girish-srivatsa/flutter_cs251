@@ -60,6 +60,7 @@
     
       <li class="section-title"><a href="../Screens_After-Login_logout/Screens_After-Login_logout-library.html#functions">Functions</a></li>
       <li><a href="../Screens_After-Login_logout/logout.html">logout</a></li>
+      <li><a href="../Screens_After-Login_logout/showAlertDialog.html">showAlertDialog</a></li>
     
     
     
@@ -98,11 +99,12 @@ and directs user to LoginScreen.</p>
   );
   print(response.body);
   prefs.clear();
-  Navigator.push(
+  Navigator.pushAndRemoveUntil(
     context,
     MaterialPageRoute(
       builder: (context) =&gt; LoginScreen(),
     ),
+    (e) =&gt; false,
   );
 }</code></pre>
     </section>

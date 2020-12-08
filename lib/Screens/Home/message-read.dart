@@ -27,6 +27,7 @@ class Message {
   ///Indicates If the message is sent by professor or TA
   bool is_proffessor;
 
+  ///Name of the course the message is associated with
   String course_name;
 
   ///The Constructor of a Message

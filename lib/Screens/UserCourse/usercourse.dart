@@ -86,6 +86,8 @@ class UserCourseListState extends State<UserCourseList> {
 
   ///This Widget holds the list of users' usernames.
   ///Returns empty [container] until [getUsers] returns the list.
+  ///Also provides a button to delete a user from the course, if
+  ///the user is a professor.
   @override
   Widget build(BuildContext context) {
     print(this.users);
@@ -93,7 +95,7 @@ class UserCourseListState extends State<UserCourseList> {
         ? this.users.length != 0
             ? Scaffold(
                 appBar: AppBar(
-                  title: Text("List of users page"),
+                  title: Text("List of Users"),
                   actions: [
                     LogoutButton(),
                   ],

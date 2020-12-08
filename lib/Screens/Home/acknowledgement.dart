@@ -64,6 +64,8 @@ class AcknowledgementPageState extends State<AcknowledgementPage> {
   }
 }
 
+///Parent class for state MessageListState
+///It holds the List of messages to be acknowledged by the user.
 class MessageList extends StatefulWidget {
   final List<Message> messages;
   MessageList(this.messages);
@@ -80,11 +82,6 @@ class _MessageListState extends State<MessageList> {
       itemCount: this.widget.messages.length,
       itemBuilder: (context, index) {
         var message = this.widget.messages[index];
-        print('message null???:--------------------');
-        print(message.from_username);
-        print(message.message == null);
-        print(message.message);
-        print('message:--------------------');
 
         return Card(
           child: ListTile(

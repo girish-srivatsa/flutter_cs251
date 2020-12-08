@@ -5,6 +5,8 @@ which includes most of the dashboard features, except signup.
 Specialized features like notifications are android-specific 
 while others are also available on ios.
 
+app-release.apk is the apk file for this app.
+
 # Key Features
 
 ## Login Page

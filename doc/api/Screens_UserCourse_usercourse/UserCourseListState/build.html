@@ -111,7 +111,9 @@
     </section>
     <section class="desc markdown">
       <p>This Widget holds the list of users' usernames.
-Returns empty <code>container</code> until <a href="../../Screens_UserCourse_usercourse/getUsers.html">getUsers</a> returns the list.</p>
+Returns empty <code>container</code> until <a href="../../Screens_UserCourse_usercourse/getUsers.html">getUsers</a> returns the list.
+Also provides a button to delete a user from the course, if
+the user is a professor.</p>
     </section>
     
     <section class="summary source-code" id="source">
@@ -123,7 +125,7 @@ Widget build(BuildContext context) {
       ? this.users.length != 0
           ? Scaffold(
               appBar: AppBar(
-                title: Text(&quot;List of users page&quot;),
+                title: Text(&quot;List of Users&quot;),
                 actions: [
                   LogoutButton(),
                 ],

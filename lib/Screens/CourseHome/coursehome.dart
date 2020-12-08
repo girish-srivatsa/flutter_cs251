@@ -180,7 +180,7 @@ class CourseHomePageState extends State<CourseHomePage> {
 ///Holds the title bar.
 Widget bar() {
   return AppBar(
-    title: Text("hello world"),
+    title: Text("Course Home Page"),
     actions: [
       LogoutButton(),
     ],

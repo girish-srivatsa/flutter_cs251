@@ -66,6 +66,7 @@
           <li><a href="Screens_After-Login_logout/Screens_After-Login_logout-library.html">logout</a></li>
           <li><a href="main/main-library.html">main</a></li>
           <li><a href="Screens_CourseHome_message/Screens_CourseHome_message-library.html">message</a></li>
+          <li><a href="Screens_Home_message-read/Screens_Home_message-read-library.html">message-read</a></li>
           <li><a href="Screens_CourseHome_messageAllform/Screens_CourseHome_messageAllform-library.html">messageAllform</a></li>
           <li><a href="Screens_CourseHome_messageTAform/Screens_CourseHome_messageTAform-library.html">messageTAform</a></li>
           <li><a href="Screens_CourseHome_messagelist/Screens_CourseHome_messagelist-library.html">messagelist</a></li>
@@ -82,7 +83,56 @@
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
       <section class="desc markdown">
-        <h1 id="flutter_cs251">flutter_cs251</h1>
+        <h1 id="notify-me--a-flutter-application">Notify Me- A Flutter Application</h1>
+<p>This is a project that is a flutter application, 
+which includes most of the dashboard features, except signup. 
+Specialized features like notifications are android-specific 
+while others are also available on ios.</p>
+<h1 id="key-features">Key Features</h1>
+<h2 id="login-page">Login Page</h2>
+<p>This page facilitates the login of a user. It has a 
+specially designed pleasant look,
+giving a nice User Experience. Once Logged In, User cannot use 
+Android's back button; so the password is not revealed.</p>
+<h2 id="notifications">Notifications</h2>
+<p>This app can receive notifications sent by Professors/TAs if the 
+user logged in is registered for the course.
+If it is a low priority message, it only appears on the 
+notifications list.
+If high priority, the user receives a push notification, which
+overrides silent/DND features and rings a tone unless 
+the device is on mute.</p>
+<h2 id="acknowledgement">Acknowledgement</h2>
+<p>If there are some messages not acknowledged by the logged in user,
+this page is shown. It lists all the unread messages by the user.
+This page can only be escaped once the "Acknowledge" button 
+is tapped by the user to acknowledge.
+After this, the user's name is added in the list of users who have 
+read the message.</p>
+<h2 id="home-page">Home Page</h2>
+<p>After Login, user is redirected to this page unless some Messages 
+require acknowledgement.
+It contains the List of courses the user is registered for.
+If the user is a professor he can add courses.</p>
+<h2 id="members-page">Members Page</h2>
+<p>A user when clicks on the "members" button on a course card is redirected to this page.
+Everyone can see the list of users in a course that they are part of including the professor himself.
+The professor can also remove students of the course if suspicious activities are detected.</p>
+<h2 id="course-home-page">Course Home Page</h2>
+<p>Messages can be sent and received.
+Prof can send messages to both TA and student .
+Message to TA cannot be seen by the students.
+TA can send messages to students not professors.
+Professor can add both TA and students but TA can only add students
+Students do not have any control(Especially they can’t send messages/add users to make sure to have only important stuff on the page).
+So each message has a header which contains the sender's username
+which on click gives the list of users who read the  message
+The body contains the message.
+Message has two forms.Low priority and High Priority Messages.</p>
+<h2 id="readby-page">ReadBy Page</h2>
+<p>If a user clicks on a message, it redirects to this page.
+It contains the list of users who have acknowledged that 
+particular message.</p>
       </section>
       
       <section class="summary">
@@ -186,6 +236,12 @@
           </dd>
           <dt id="message">
             <span class="name"><a href="Screens_CourseHome_message/Screens_CourseHome_message-library.html">message</a></span>           
+          </dt>
+          <dd>
+             
+          </dd>
+          <dt id="message-read">
+            <span class="name"><a href="Screens_Home_message-read/Screens_Home_message-read-library.html">message-read</a></span>           
           </dt>
           <dd>
              

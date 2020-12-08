@@ -62,7 +62,7 @@ class MessageAllformState extends State<MessageAllform> {
             controller: this.controller,
             decoration: InputDecoration(
               prefixIcon: Icon(Icons.message),
-              labelText: "Give ur message to All",
+              labelText: "Type your message for All",
               suffixIcon: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
