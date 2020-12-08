@@ -9,6 +9,7 @@ import 'coursestatus.dart';
 import '../CourseHome/coursehome.dart';
 import '../UserCourse/usercourse.dart';
 
+///Gets the Status of the user wrt a course with courseid [id].
 Future<Status> getStat(int id) async {
   String tok = await prefs.getString('token');
   final response = await http.get(
@@ -27,16 +28,24 @@ Future<Status> getStat(int id) async {
   }
 }
 
+///The parent Class for the State CourseListState.
 class CourseList extends StatefulWidget {
   final bool prof;
   final List<Course> courses;
   final bool done;
   CourseList({this.courses, this.done, this.prof});
   @override
-  _CourseListState createState() => _CourseListState();
+  CourseListState createState() => CourseListState();
 }
 
-class _CourseListState extends State<CourseList> {
+///This class holds the UI and functions corresponding
+///to the list of courses of the user.
+class CourseListState extends State<CourseList> {
+  ///This function redirects the user to the home page
+  ///of a course with courseid [id].
+  ///
+  ///It appropriately judges the [Status] of the user
+  ///wrt the course by calling the function [getStat].
   void doa(int id) {
     getStat(id).then((val) => {
           Navigator.push(
@@ -53,6 +62,10 @@ class _CourseListState extends State<CourseList> {
         });
   }
 
+  ///This Widget lists the Courses vertically.
+  ///
+  ///The code and the name of the course are displayed.
+  ///On tapping on a Course, it redirects to the course homepage.
   @override
   Widget build(BuildContext context) {
     return widget.done

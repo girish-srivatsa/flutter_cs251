@@ -1,30 +1,43 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+///Parent Class for the State MessageTAForm
 class MessageTAform extends StatefulWidget {
   final Function(String, String, bool) callback;
   final Function() depressor;
   MessageTAform({this.callback, this.depressor});
   @override
-  _MessageTAformState createState() => _MessageTAformState();
+  MessageTAformState createState() => MessageTAformState();
 }
 
-class _MessageTAformState extends State<MessageTAform> {
+///This Class holds the UI and functions for the MessageTA Form.
+class MessageTAformState extends State<MessageTAform> {
+  ///[z] is `true` if the priority of message is high, else it is [false].
+  ///Default Initialisation is `false`.
   bool z = false;
+
+  ///Key representing the Form.
   final _formKey = GlobalKey<FormState>();
+
+  ///This is an interface between the app and the text input by the user.
   final controller = new TextEditingController();
+
   @override
   void dispose() {
     super.dispose();
     controller.dispose();
   }
 
+  ///This function facilitates sending the message to TAs.
+  ///Called when send button is tapped by the user.
   void t() {
     FocusScope.of(context).unfocus();
     widget.callback(controller.text, 'TA', this.z);
     controller.clear();
   }
 
+  ///This Widget hold the Form to send the Message to TAs.
+  ///It has a toggler to indicate the priority of the message.
   @override
   Widget build(BuildContext context) {
     return new Form(
@@ -48,7 +61,7 @@ class _MessageTAformState extends State<MessageTAform> {
             controller: this.controller,
             decoration: InputDecoration(
               prefixIcon: Icon(Icons.message),
-              labelText: "Give ur message to TA",
+              labelText: "Type your message for TAs",
               suffixIcon: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,

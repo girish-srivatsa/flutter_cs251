@@ -7,14 +7,20 @@ import '../../main.dart';
 import '../CourseHome/message.dart';
 import '../../constants.dart';
 
+///The Parent class for the State AcknowledgementPageState.
 class AcknowledgementPage extends StatefulWidget {
   final List<Message> messages;
   AcknowledgementPage({this.messages});
   @override
-  _AcknowledgementPageState createState() => _AcknowledgementPageState();
+  AcknowledgementPageState createState() => AcknowledgementPageState();
 }
 
-class _AcknowledgementPageState extends State<AcknowledgementPage> {
+///This Class Facilitates the UI and functions
+///for acknowledgement of a message by a user.
+class AcknowledgementPageState extends State<AcknowledgementPage> {
+  ///This function facilitates acknowledgement of a message by a user.
+  ///Once acknowledged, the user's name is added to the [readby] list
+  ///for the particular message.
   void acknowledge() async {
     String tok = await prefs.getString('token');
     print(tok);
@@ -42,6 +48,8 @@ class _AcknowledgementPageState extends State<AcknowledgementPage> {
     Navigator.pop(Application.navKey.currentContext);
   }
 
+  ///This Widget holds the acknowledge button for a message,
+  ///which on pressed invokes the [acknowledge()] function.
   @override
   Widget build(BuildContext context) {
     return Column(

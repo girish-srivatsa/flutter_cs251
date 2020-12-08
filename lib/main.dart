@@ -1,3 +1,4 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,7 +6,15 @@ import 'package:flutter_auth/Screens/Home/home.dart';
 import 'package:flutter_auth/Screens/Login/login_screen.dart';
 import 'package:flutter_auth/constants.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as secure;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'Screens/Home/courseform.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'function.dart';
+import 'Screens/CourseHome/messagewrapper.dart';
+import 'Screens/CourseHome/coursehome.dart';
+import 'Screens/CourseHome/messageTAform.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'constants.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -15,13 +24,25 @@ import 'Screens/Home/acknowledgement.dart';
 import 'Screens/CourseHome/message.dart';
 import 'package:flutter_dnd/flutter_dnd.dart';
 
+///Variable to facilitate interaction with local storage.
 final store = new secure.FlutterSecureStorage();
+
+///The BASE URL of the backend.
 final BASE = 'https://back-dashboard.herokuapp.com/';
-const myTask = "syncWithTheBackEnd";
+
+///The JSON Web token corresponding the current user session
 String token;
+
+///To Indicate if a user is loggedIn or not
 bool loggedIn;
+
+///Variable to facilitate interaction with FirebaseMessaging for notifications.
 final fbm = FirebaseMessaging();
+
+///The interface for values stored in Local Storage of user's device
 Prefs prefs = new Prefs();
+
+///A Channel for communicating with platform plugins using asynchronous method calls.
 const MethodChannel _channel = MethodChannel('com.example.flutter_auth/1');
 Map<String, String> channelMap = {
   "id": "MESSAGES",
@@ -29,6 +50,7 @@ Map<String, String> channelMap = {
   "description": "hi"
 };
 
+///To create a channel for Notifications.
 void _createChannel() async {
   try {
     await _channel.invokeMethod('createNotificationChannel', channelMap);
@@ -38,6 +60,9 @@ void _createChannel() async {
   }
 }
 
+///This function facilitates background notifications, and manages
+///to surpass the DND/silent feature of the user's device
+///depending upon the priority of the message.
 Future<dynamic> _backgroundMessageHandler(Map<String, dynamic> message) async {
   int filter = await FlutterDnd.getCurrentInterruptionFilter();
   String filterName = FlutterDnd.getFilterName(filter);
@@ -66,7 +91,25 @@ Future<dynamic> _backgroundMessageHandler(Map<String, dynamic> message) async {
   }
 }
 
-Future<void> _showMyDialog(context, String bod, bool pr,
+///This function facilitates acknowledgement of a message by a user.
+///Once acknowledged, the user's name is added to the [readby] list
+///for the particular message.
+Future<dynamic> ackn(int id) async {
+  String username = await prefs.getString('username');
+  String tok = await prefs.getString('token');
+  final response = await http.post(
+    'https://back-dashboard.herokuapp.com/api/readby/' + id.toString() + '/',
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'JWT ' + tok,
+    },
+    body: jsonEncode(
+      <String, String>{"username": username},
+    ),
+  );
+}
+
+Future<void> _showMyDialog(context, String bod, bool pr, int id,
     {bool pr1 = true}) async {
   // int filter = await FlutterDnd.getCurrentInterruptionFilter();
   // if (filter != 1) return null;
@@ -104,8 +147,7 @@ Future<void> _showMyDialog(context, String bod, bool pr,
               if (pr) {
                 FlutterRingtonePlayer.stop();
               }
-              Navigator.of(context).pop();
-              Phoenix.rebirth(context);
+              ackn(id).then((val) => {Phoenix.rebirth(context)});
             },
           ),
         ],
@@ -114,6 +156,9 @@ Future<void> _showMyDialog(context, String bod, bool pr,
   );
 }
 
+///This function Sets a callback for receiving messages
+///from the platform plugins on the notification channel.
+///Appropriately notifies corresponding to priority of the message.
 Future<Null> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChannels.lifecycle.setMessageHandler((message) async {
@@ -138,25 +183,23 @@ Future<Null> main() async {
   fbm.getToken().then((val) => {print(val)});
   _createChannel();
   fbm.configure(
-      onMessage: (msg) {
+      onMessage: (msg) async {
         print('msg');
         print(msg);
         print(Application.navKey.currentContext.size.aspectRatio);
         print(Application.navKey.currentWidget);
-        var U = msg["data"];
-        print("U = ");
-        print(U);
-        String p = msg["data"]["priority"];
-        bool prior;
-        if (p == "true") {
-          prior = true;
-        } else {
-          prior = false;
+        List<Message> msg1 = await getUnreadMessage();
+        FlutterRingtonePlayer.playNotification();
+        if (msg1.length != 0) {
+          Navigator.push(
+            Application.navKey.currentContext,
+            MaterialPageRoute(
+              builder: (context) {
+                return AcknowledgementPage(messages: msg1);
+              },
+            ),
+          );
         }
-        print("prior = ");
-        print(prior);
-        _showMyDialog(Application.navKey.currentContext, U["body"], prior);
-        print("Finished showMyDialog");
         return;
       },
       onBackgroundMessage: _backgroundMessageHandler,
@@ -205,8 +248,12 @@ Future<Null> main() async {
   }
 }
 
+///This widget is the root of the application.
+///
+///Initialises the State of the App,
+///opens [LoginScreen()] if no past session exists
+///
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     print("appkey = ");

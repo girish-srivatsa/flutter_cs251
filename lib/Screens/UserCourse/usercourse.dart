@@ -9,6 +9,8 @@ import '../After-Login/logout.dart';
 import '../../constants.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
+///Returns a [List] of [User]s who have taken
+///the course with user_id [id].
 Future<List<User>> getUsers(int id) async {
   String tok = await prefs.getString('token');
   final response = await http.get(
@@ -28,17 +30,27 @@ Future<List<User>> getUsers(int id) async {
   }
 }
 
+///Parent Class for the UserCourseListState.
 class UserCourseList extends StatefulWidget {
   final bool prof;
   final int id;
   UserCourseList({this.prof, this.id});
   @override
-  _UserCourseListState createState() => _UserCourseListState();
+  UserCourseListState createState() => UserCourseListState();
 }
 
-class _UserCourseListState extends State<UserCourseList> {
+///This Class represents the UI for showing the list of Users who
+///are associated with the course.
+class UserCourseListState extends State<UserCourseList> {
+  ///This variable contains the list of Users who
+  ///are associated with the course.
   List<User> users;
+
+  ///This variable is [false] until the method [getUsers] returns a response on init.
   bool done = false;
+
+  ///Initialises the State, its [super], and calls [getReadBy] to get the list
+  ///of Users who are associated with the course. Sets [done] to true.
   @override
   void initState() {
     super.initState();
@@ -50,6 +62,7 @@ class _UserCourseListState extends State<UserCourseList> {
         });
   }
 
+  ///This function facilitates removing a user from a course.
   void del(String username) async {
     String tok = await prefs.getString('token');
     print(username);
@@ -71,6 +84,8 @@ class _UserCourseListState extends State<UserCourseList> {
     }
   }
 
+  ///This Widget holds the list of users' usernames.
+  ///Returns empty [container] until [getUsers] returns the list.
   @override
   Widget build(BuildContext context) {
     print(this.users);

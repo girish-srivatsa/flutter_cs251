@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/constants.dart';
 
+///Creates a fancy Rounded Button
 class RoundedButton extends StatelessWidget {
   final String text;
   final Function press;

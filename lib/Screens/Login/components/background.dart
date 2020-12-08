@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+///Class for the background of the Login Page.
 class Background extends StatelessWidget {
   final Widget child;
   const Background({
@@ -7,6 +8,7 @@ class Background extends StatelessWidget {
     @required this.child,
   }) : super(key: key);
 
+  ///Widget specifies the looks of the Login Page.
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

@@ -7,6 +7,7 @@ import '../../main.dart';
 import 'user.dart';
 import '../After-Login/logout.dart';
 
+///This function returs a `list` of `user`s who have read the message with message_id [id]
 Future<List<User>> getReadBy(int id) async {
   String tok = await prefs.getString('token');
   final response = await http.get(
@@ -24,16 +25,25 @@ Future<List<User>> getReadBy(int id) async {
   }
 }
 
+///Parent Class for the UserListState.
 class UserList extends StatefulWidget {
   final int id;
   UserList(this.id);
   @override
-  _UserListState createState() => _UserListState();
+  UserListState createState() => UserListState();
 }
 
-class _UserListState extends State<UserList> {
+///This Class represents the UI for showing the list of Users who
+///have read the message.
+class UserListState extends State<UserList> {
+  ///This variable contains the list of Users who have read the message.
   List<User> users;
+
+  ///This variable is `false` until [getReadBy] returns a response on init.
   bool done = false;
+
+  ///Initialises the State, its `super`, and calls [getReadBy()] to get the list
+  ///of Users who have read the message. Sets [done] to true.
   @override
   void initState() {
     super.initState();
@@ -45,6 +55,9 @@ class _UserListState extends State<UserList> {
         });
   }
 
+  ///This Widget holds the list of those users' usernames
+  ///who have read the message.
+  ///Returns empty `container` until [getReadBy()] returns the list.
   @override
   Widget build(BuildContext context) {
     print(this.users);
@@ -52,7 +65,7 @@ class _UserListState extends State<UserList> {
         ? this.users.length != 0
             ? Scaffold(
                 appBar: AppBar(
-                  title: Text("Read By page"),
+                  title: Text("Message Read by"),
                   actions: [
                     LogoutButton(),
                   ],
@@ -60,10 +73,10 @@ class _UserListState extends State<UserList> {
                 body: ListView.builder(
                   itemCount: this.users.length,
                   itemBuilder: (context, index) {
-                    var message = this.users[index];
+                    var user = this.users[index];
                     return Card(
                       child: ListTile(
-                        title: Text(message.username),
+                        title: Text(user.username),
                       ),
                     );
                   },

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_auth/components/text_field_container.dart';
 import 'package:flutter_auth/constants.dart';
 
+///Creates a fancy Rounded InputField
 class RoundedInputField extends StatelessWidget {
   final String hintText;
   final IconData icon;

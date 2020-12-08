@@ -12,6 +12,7 @@ import '../CourseHome/message.dart';
 import 'acknowledgement.dart';
 import 'coursewrapper.dart';
 
+///Returns a List of Courses taken/offered by the user.
 Future<List<Course>> getCourse() async {
   String tok = await prefs.getString('token');
   final response = await http.get(
@@ -28,6 +29,7 @@ Future<List<Course>> getCourse() async {
   }
 }
 
+///Returns a List of messages not read by the user
 Future<List<Message>> getUnreadMessage() async {
   String tok = await prefs.getString('token');
   final response = await http.get(
@@ -45,6 +47,7 @@ Future<List<Message>> getUnreadMessage() async {
     return null;
 }
 
+///Parent Class for HomePage State.
 class HomePage extends StatefulWidget {
   bool prof;
   HomePage({this.prof});
@@ -52,6 +55,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
+///Class holding the Widget for list of Courses, and unread messages.
 class _HomePageState extends State<HomePage> {
   List<Course> courses;
   List<Message> unreadMessages;

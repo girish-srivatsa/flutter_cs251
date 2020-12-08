@@ -11,6 +11,10 @@ import 'addStud.dart';
 import 'messagewrapper.dart';
 import '../After-Login/logout.dart';
 
+///This Function requests from the backend and returns
+///the list of messages corresponding to the course with
+///course_id [id]. It is called whenever
+///[CourseHomePageState] is created.
 Future<List<Message>> getMessage(int id) async {
   String tok = await prefs.getString('token');
   final response = await http.get(
@@ -28,22 +32,23 @@ Future<List<Message>> getMessage(int id) async {
   }
 }
 
-final List<Message> a = <Message>[
-  new Message(from_username: 'l', message: 'jk')
-];
-
+///Parent Class for the CoursehomePageState
 class CourseHomePage extends StatefulWidget {
   String stat;
   final int id;
   CourseHomePage({this.stat, this.id});
   @override
-  _CourseHomePageState createState() => _CourseHomePageState();
+  CourseHomePageState createState() => CourseHomePageState();
 }
 
-class _CourseHomePageState extends State<CourseHomePage> {
+///This class hosts the UI and functions related to a course home page.
+class CourseHomePageState extends State<CourseHomePage> {
+  ///The List of all Messages of the Course.
   List<Message> messages;
   bool done = true;
 
+  ///This function calls the method [addMessage] with same parameters,
+  ///and the [message] is added to messagelist using the function [addm]
   void newCourse(String message, String to, bool z) {
     print('h');
     this.setState(() {
@@ -56,6 +61,10 @@ class _CourseHomePageState extends State<CourseHomePage> {
     });
   }
 
+  ///This function sends the message with text [message] to the backend
+  ///for it to be sent to desired users and returns a [Message] object.
+  ///The parameter [to] indicates if the message is for TAs or students, while
+  ///the boolean parameter [z] indicates the priority of the message.
   Future<Message> addMessage(String message, String to, bool z) async {
     String t;
     if (z) {
@@ -64,7 +73,6 @@ class _CourseHomePageState extends State<CourseHomePage> {
       t = "false";
     }
     String tok = await prefs.getString('token');
-    // print("url ======== " + 'https://back-dashboard.herokuapp.com' + this.widget.id.toString() + '/');
     final response = await http.post(
       'https://back-dashboard.herokuapp.com/api/messages/' +
           this.widget.id.toString() +
@@ -90,6 +98,7 @@ class _CourseHomePageState extends State<CourseHomePage> {
     }
   }
 
+  ///This function adds the message [m], unless [m] is null, to the list of messages [msg].
   void addm(Message m, List<Message> msg) {
     if (m == null)
       return;
@@ -98,6 +107,7 @@ class _CourseHomePageState extends State<CourseHomePage> {
     }
   }
 
+  ///Initialises the State of CourseHomePage with the messages of the course.
   @override
   void initState() {
     super.initState();
@@ -126,6 +136,10 @@ class _CourseHomePageState extends State<CourseHomePage> {
     print(ch);
   }
 
+  ///The Widget holds the UI of the CourseHomePage.
+  ///
+  ///If there are no messages it returns a null container.
+  ///Else, if the user is
   @override
   Widget build(BuildContext context) {
     print('2');
@@ -163,6 +177,7 @@ class _CourseHomePageState extends State<CourseHomePage> {
   }
 }
 
+///Holds the title bar.
 Widget bar() {
   return AppBar(
     title: Text("hello world"),

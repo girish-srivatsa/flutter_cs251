@@ -1,17 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+///Parent Class for the State CourseForm.
+///Used to create new Courses.
 class CourseForm extends StatefulWidget {
   final Function(String, String) callback;
   final Function() depressor;
   CourseForm({this.callback, this.depressor});
   @override
-  _CourseFormState createState() => _CourseFormState();
+  CourseFormState createState() => CourseFormState();
 }
 
-class _CourseFormState extends State<CourseForm> {
+///This Class holds the UI and functions for the CourseForm,
+///Used to create new Courses.
+class CourseFormState extends State<CourseForm> {
+  ///Key representing the Form.
   final _formKey = GlobalKey<FormState>();
+
+  ///Input facilitator for course code.
   final controller_code = new TextEditingController();
+
+  ///Input facilitator for course name.
   final controller_name = new TextEditingController();
 
   @override
@@ -21,6 +30,8 @@ class _CourseFormState extends State<CourseForm> {
     controller_name.dispose();
   }
 
+  ///This function facilitates creating the course.
+  ///Called when the button is tapped by the user.
   void click() {
     FocusScope.of(context).unfocus();
     widget.callback(controller_name.text, controller_code.text);
@@ -28,6 +39,7 @@ class _CourseFormState extends State<CourseForm> {
     controller_name.clear();
   }
 
+  ///This Widget holds the UI of the Form used to create a course.
   @override
   Widget build(BuildContext context) {
     return new Form(
@@ -68,7 +80,7 @@ class _CourseFormState extends State<CourseForm> {
                   return 'Course Code empty';
                 }
                 if (value.length > 5) {
-                  return 'long course code limit 5';
+                  return 'Course code length limit 5';
                 }
                 return null;
               },

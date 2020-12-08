@@ -3,15 +3,23 @@ import 'package:flutter/material.dart';
 import './message.dart';
 import '../ReadBy/readby.dart';
 
+///Parent Class for the State MessageList
 class MessageList extends StatefulWidget {
   final List<Message> messages;
   final bool done;
   MessageList(this.messages, this.done);
   @override
-  _MessageListState createState() => _MessageListState();
+  MessageListState createState() => MessageListState();
 }
 
-class _MessageListState extends State<MessageList> {
+///This class holds the UI and functions corresponding to the list of Messages
+///for a course.
+class MessageListState extends State<MessageList> {
+  ///This Widget lists the messages vertically.
+  ///
+  ///The text and sender of the message are displayed.
+  ///On tapping on a message, it directs to the list
+  ///of users who have read the message.
   @override
   Widget build(BuildContext context) {
     print(this.widget.messages);

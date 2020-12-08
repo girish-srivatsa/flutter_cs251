@@ -10,13 +10,17 @@ class StudentAdd extends StatefulWidget {
   final int id;
   StudentAdd({this.id, this.stat});
   @override
-  _StudentAddState createState() => _StudentAddState();
+  StudentAddState createState() => StudentAddState();
 }
 
-class _StudentAddState extends State<StudentAdd> {
+///This class hosts the UI and functions to add a student/TA to a course.
+class StudentAddState extends State<StudentAdd> {
   final _formKey = GlobalKey<FormState>();
   final controller = new TextEditingController();
 
+  ///This Function allows adding of a Student to the course.
+  ///Its takes the student name from the input field (TextEditingController)
+  ///from the class and hence no parameter is required.
   void addStud() async {
     print('h');
     FocusScope.of(context).unfocus();
@@ -44,6 +48,9 @@ class _StudentAddState extends State<StudentAdd> {
     }
   }
 
+  ///This Function allows adding of a TA to the course.
+  ///Its takes the name from the input field (TextEditingController) common to the class
+  ///and hence no parameter.
   void addTA() async {
     print('h');
     FocusScope.of(context).unfocus();
@@ -71,6 +78,9 @@ class _StudentAddState extends State<StudentAdd> {
     }
   }
 
+  ///This Widget provides a form with an input field, where name should be written.
+  ///If the user is a professor, he can add the user with that name as a TA or as a student.
+  ///If the user is a TA, he can add the user with that name as a student for the course.
   @override
   Widget build(BuildContext context) {
     return new Form(
@@ -107,17 +117,5 @@ class _StudentAddState extends State<StudentAdd> {
         ],
       ),
     );
-  }
-}
-
-class TAAdd extends StatefulWidget {
-  @override
-  _TAAddState createState() => _TAAddState();
-}
-
-class _TAAddState extends State<TAAdd> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }
